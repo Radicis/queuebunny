@@ -1,0 +1,15 @@
+/*
+ * @NOTE: Prepend a `~` to css file paths that are in your node_modules
+ *        See https://github.com/webpack-contrib/sass-loader#imports
+ */
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+#root {
+    height: calc(100% - 80px);
+}
