@@ -25,6 +25,7 @@ type Props = {
   messages: Array,
   clearMessages: () => void,
   bindExchanges: () => void,
+  createConnection: () => void,
   classes: object
 };
 
@@ -33,15 +34,21 @@ class QueueMonitor extends Component<Props> {
 
   state = {};
 
+  componentWillMount () {
+    const { createConnection } = this.props;
+    console.log('Connecting...');
+    createConnection();
+  }
+
   render() {
     const { classes, exchanges, messages, setExchanges } = this.props;
     const {} = this.state;
     return (
-      <Grid container>
-        <Grid item xs={12}>
+      <Grid container direction="column">
+        <Grid item>
           <QueueOptions exchanges={exchanges} setExchanges={setExchanges} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item>
           <MessageList messages={messages} />
         </Grid>
       </Grid>

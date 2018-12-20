@@ -14,7 +14,7 @@ import Grid from '@material-ui/core/Grid';
 
 import * as OptionsActions from '../actions/options';
 import AppHeader from './AppHeader';
-import Menu from './Menu';
+import Event from './Event';
 
 const styles = theme => ({
   mainContainer: {
@@ -125,7 +125,7 @@ class App extends Component<Props> {
               className={classes.fullHeight}
             >
               <Grid item xs={4} className={classes.fullHeight}>
-                <Menu />
+                <Event />
               </Grid>
 
               <Grid item xs={8} className={classes.fullHeight}>

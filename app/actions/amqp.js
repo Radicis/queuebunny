@@ -8,6 +8,7 @@ import UUID from 'uuid/v1';
 import type { Dispatch, GetState } from '../reducers/types';
 
 export const SET_CONNECTION = 'SET_CONNECTION';
+export const SET_EXCHANGES = 'SET_EXCHANGES';
 export const SET_CHANNEL = 'SET_CHANNEL';
 
 export function createConnection() {

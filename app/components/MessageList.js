@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
 
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 import Typography from '@material-ui/core/Typography';
 
 const styles = () => ({});
@@ -20,10 +22,17 @@ class MessageList extends Component<Props> {
   render() {
     const { classes, messages } = this.props;
     const {} = this.state;
+    console.log(messages);
     return (
-      <Typography variant="h6" color="inherit">
-        Message List
-      </Typography>
+      <List>
+        {_.map(messages, m => (
+          <ListItem>
+            <Typography variant="h6" color="inherit">
+              Message: {m.name}
+            </Typography>
+          </ListItem>
+        ))}
+      </List>
     );
   }
 }

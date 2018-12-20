@@ -36,17 +36,17 @@ export function selectEvent(eventId) {
   return {
     type: SELECT_EVENT,
     selectEvent: eventId
-  }
+  };
 }
 
 export function updateEvent(updatedEvent) {
-  return (dispatch: Dispatch, getState: GetState) => {
+  return (dispatch: Dispatch) => {
     // Get events from the store
     const storeEvents = JSONStore.get('events');
 
-    const index = _.findIndex(storeEvents, {id: updateEvent.id});
+    const index = _.findIndex(storeEvents, { id: updateEvent.id });
 
-    const updatedStoreEvents = storeEvents.splice(index, 1, updatedEvent)
+    const updatedStoreEvents = storeEvents.splice(index, 1, updatedEvent);
 
     // Update the store with the new values
     JSONStore.set('events', updatedStoreEvents);
@@ -62,6 +62,23 @@ export function addEvent(newEvent) {
     const storeEvents = JSONStore.get('events');
 
     const updatedStoreEvents = storeEvents.push(newEvent);
+
+    // Update the store with the new values
+    JSONStore.set('events', updatedStoreEvents);
+
+    // Update the item in the state
+    dispatch(setEvents(updatedStoreEvents));
+  };
+}
+
+export function deleteEvent(eventId) {
+  return (dispatch: Dispatch) => {
+    // Get events from the store
+    const storeEvents = JSONStore.get('events');
+
+    const index = _.findIndex(storeEvents, { id: eventId });
+
+    const updatedStoreEvents = storeEvents.splice(index, 1);
 
     // Update the store with the new values
     JSONStore.set('events', updatedStoreEvents);
