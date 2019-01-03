@@ -1,15 +1,9 @@
 // @flow
-import _ from 'lodash';
-import {
-  SET_CONNECTION,
-  SET_CHANNEL,
-  SET_EXCHANGES
-} from '../actions/amqp';
+import { SET_CONNECTION, SET_EXCHANGES } from '../actions/amqp';
 import type { Action } from './types';
 
 const initialState = {
-  connection: null,
-  channel: null,
+  connection: false,
   exchanges: []
 };
 
@@ -19,11 +13,6 @@ export default function(state = initialState, action: Action) {
       return {
         ...state,
         connection: action.connection
-      };
-    case SET_CHANNEL:
-      return {
-        ...state,
-        channel: action.channel
       };
     case SET_EXCHANGES:
       return {

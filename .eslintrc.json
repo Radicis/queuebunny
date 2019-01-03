@@ -6,5 +6,10 @@
         "config": "configs/webpack.config.eslint.js"
       }
     }
+  },
+  "rules": {
+    "no-underscore-dangle": "off",
+    "promise/always-return": "off",
+    "no-param-reassign": "off"
   }
 }

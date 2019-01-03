@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import _ from 'lodash';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -30,6 +31,7 @@ type Props = {
   lightTheme: boolean,
   handleClose: () => void,
   handleOk: () => void,
+  purgeEvents: () => void,
   classes: object
 };
 
@@ -43,7 +45,7 @@ class SetOptions extends Component<Props> {
   componentWillMount() {
     const { lightTheme } = this.props;
     this.setState({
-      lightTheme: lightTheme
+      lightTheme
     });
   }
 
@@ -62,10 +64,10 @@ class SetOptions extends Component<Props> {
     const { handleOk } = this.props;
     const updatedOptions = _.assign({}, this.state);
     handleOk(updatedOptions);
-  }
+  };
 
   render() {
-    const { classes, open, handleClose, handleOk } = this.props;
+    const { classes, open, handleClose, purgeEvents } = this.props;
     const { lightTheme } = this.state;
     return (
       <Dialog
@@ -86,6 +88,9 @@ class SetOptions extends Component<Props> {
               }
               label="Vlad Mode"
             />
+          </FormGroup>
+          <FormGroup row>
+            <Button onClick={purgeEvents}>Purge Events</Button>
           </FormGroup>
         </DialogContent>
         <DialogActions>

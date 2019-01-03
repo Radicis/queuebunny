@@ -17,16 +17,20 @@ type Props = {
   addEvent: () => void,
   deleteEvent: () => void,
   updateEvent: () => void,
+  publish: () => void,
+  getEventsFromStore: () => void,
   events: Array,
   exchanges: Array,
   selectedEvent: object,
+  connection: boolean,
   classes: object
 };
 
 const mapStateToProps = state => ({
   events: state.events.events,
   exchanges: state.amqp.exchanges,
-  selectedEvent: state.events.selectedEvent
+  selectedEvent: state.events.selectedEvent,
+  connection: state.amqp.connection
 });
 
 const mapDispatchToProps = dispatch =>

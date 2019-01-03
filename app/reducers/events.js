@@ -5,7 +5,7 @@ import type { Action } from './types';
 
 const initialState = {
   events: [],
-  selectedEvent: null
+  selectedEvent: ''
 };
 
 export default function(state = initialState, action: Action) {
@@ -18,7 +18,7 @@ export default function(state = initialState, action: Action) {
     case SET_EVENTS:
       return {
         ...state,
-        eventS: action.events
+        events: action.events
       };
     default:
       return state;

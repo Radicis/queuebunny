@@ -1,9 +1,6 @@
 // @flow
 import _ from 'lodash';
-import {
-  ADD_MESSAGE,
-  CLEAR_MESSAGES
-} from '../actions/messages';
+import { ADD_MESSAGE, CLEAR_MESSAGES } from '../actions/messages';
 import type { Action } from './types';
 
 const initialState = {

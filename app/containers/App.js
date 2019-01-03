@@ -13,14 +13,15 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
 import * as OptionsActions from '../actions/options';
+import * as AmqpActions from '../actions/amqp';
+
 import AppHeader from './AppHeader';
 import Event from './Event';
 
 const styles = theme => ({
   mainContainer: {
-    width: '100%',
-    height: '100%',
-    paddingTop: theme.spacing.unit * 2,
+    height: 'calc(100% - 16px)',
+    padding: theme.spacing.unit * 2,
     overflow: 'hidden',
     borderRadius: 0
   },
@@ -34,21 +35,22 @@ type Props = {
   menuCollapsed: boolean,
   getOptionsFromStore: () => void,
   children: React.Node,
+  createConnection: () => void,
   classes: object
 };
 
 const primary = {
-  light: '#03A9F4',
-  main: '#607D8B',
-  dark: '#455A64',
+  light: '#ffc4ff',
+  main: '#ce93d8',
+  dark: '#9c64a6',
   contrastText: '#212121'
 };
 
 const secondary = {
-  light: '#89e9ff',
-  main: '#03A9F4',
-  dark: '#026a99',
-  contrastText: '#fff'
+  light: '#b085f5',
+  main: '#7e57c2',
+  dark: '#4d2c91',
+  contrastText: '#ffffff'
 };
 
 class App extends Component<Props> {
@@ -65,7 +67,7 @@ class App extends Component<Props> {
   };
 
   componentWillMount() {
-    const { getOptionsFromStore, options } = this.props;
+    const { getOptionsFromStore, options, createConnection } = this.props;
     getOptionsFromStore();
     const updatedTheme = {
       palette: {
@@ -77,6 +79,7 @@ class App extends Component<Props> {
     this.setState({
       theme: createMuiTheme(updatedTheme)
     });
+    createConnection();
   }
 
   componentDidUpdate() {
@@ -145,7 +148,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators(_.assign({}, OptionsActions), dispatch);
+  bindActionCreators(_.assign({}, OptionsActions, AmqpActions), dispatch);
 
 export default connect(
   mapStateToProps,

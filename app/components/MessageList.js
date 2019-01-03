@@ -5,13 +5,15 @@ import _ from 'lodash';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 
 const styles = () => ({});
 
 type Props = {
   messages: Array,
-  classes: object
+  classes: object,
+  messageFeedVisible: boolean
 };
 
 class MessageList extends Component<Props> {
@@ -19,17 +21,31 @@ class MessageList extends Component<Props> {
 
   state = {};
 
+  parseMsg = content => {
+    try {
+      JSON.stringify(JSON.parse(content.toString()), null, 2);
+    } catch {
+      return content.toString();
+    }
+  };
+
   render() {
-    const { classes, messages } = this.props;
-    const {} = this.state;
-    console.log(messages);
+    const { classes, messages, messageFeedVisible } = this.props;
     return (
-      <List>
+      <List disabled={!messageFeedVisible}>
         {_.map(messages, m => (
           <ListItem>
-            <Typography variant="h6" color="inherit">
-              Message: {m.name}
-            </Typography>
+            <ListItemText
+              primary={m.fields.routingKey}
+              secondary={
+                <React.Fragment>
+                  <Typography component="span" color="textPrimary">
+                    <pre>{this.parseMsg(m.content)}</pre>
+                  </Typography>
+                  {m.fields.exchange}
+                </React.Fragment>
+              }
+            />
           </ListItem>
         ))}
       </List>

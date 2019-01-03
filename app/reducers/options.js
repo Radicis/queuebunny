@@ -5,19 +5,21 @@ import type { Action } from './types';
 
 const initialState = {
   options: {
-    amqp: {
+    amqpOptions: {
+      protocol: 'amqp',
       host: 'localhost',
       port: '5672',
-      user: 'user',
-      password: 'bitnami'
+      username: 'guest',
+      password: 'guest',
+      queue: 'bunny'
     },
-    http: {
+    httpOptions: {
+      protocol: 'http',
       host: 'localhost',
       port: '15672',
-      user: 'user',
-      password: 'bitnami'
-    },
-    queue: 'bunny'
+      username: 'guest',
+      password: 'guest'
+    }
   },
   menuCollapsed: false
 };
@@ -33,7 +35,7 @@ export default function(state = initialState, action: Action) {
       return {
         ...state,
         menuCollapsed: !state.menuCollapsed
-      }
+      };
     }
     default:
       return state;

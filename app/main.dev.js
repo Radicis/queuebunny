@@ -10,10 +10,12 @@
  *
  * @flow
  */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
+import _ from 'lodash';
 import log from 'electron-log';
 import MenuBuilder from './menu';
+import amqp from './main/amqp/amqp';
 
 export default class AppUpdater {
   constructor() {
@@ -99,4 +101,61 @@ app.on('ready', async () => {
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
   new AppUpdater();
+});
+
+const blackList = [
+  null,
+  '',
+  'amq.direct',
+  'amq.fanout',
+  'amq.headers',
+  'amq.match',
+  'amq.rabbitmq.log',
+  'amq.rabbitmq.trace',
+  'amq.topic'
+];
+
+ipcMain.on('createConnection', (e, options) => {
+  console.log('Connect event from renderer');
+  amqp.createConnection(options, (initErr, exchanges) => {
+    console.log('Connected');
+    if (initErr || !exchanges) {
+      mainWindow.send('error', initErr);
+    }
+    // Strip out system exchanges
+    const validExchanges = _.filter(
+      exchanges,
+      ex => blackList.indexOf(ex.name) === -1
+    );
+    mainWindow.send('ready', validExchanges);
+  });
+});
+
+ipcMain.on('bindExchanges', (e, exchanges) => {
+  console.log('Binding Exchanges');
+  amqp.bindExchanges(exchanges, bindErr => {
+    if (bindErr) {
+      mainWindow.send('error', bindErr);
+    } else {
+      mainWindow.send('bindComplete');
+    }
+  });
+});
+
+amqp.on('message', msg => {
+  console.log('Sending message to window');
+  mainWindow.send('message', msg);
+});
+
+amqp.on('error', () => {
+  mainWindow.send('error');
+});
+
+ipcMain.on('publish', (e, msg) => {
+  console.log('Message from view');
+  amqp.publish(msg, publishErr => {
+    if (publishErr) {
+      mainWindow.send('error', publishErr);
+    }
+  });
 });
