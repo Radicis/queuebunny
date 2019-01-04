@@ -21,7 +21,8 @@ const initialState = {
       password: 'guest'
     }
   },
-  menuCollapsed: false
+  menuCollapsed: false,
+  lightTheme: false
 };
 
 export default function(state = initialState, action: Action) {

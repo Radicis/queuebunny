@@ -9,38 +9,30 @@ import 'brace/theme/github';
 
 type Props = {
   content: string,
-  aceMode: string,
-  showLines: boolean,
-  aceTheme: string,
+  lightTheme: boolean,
   updateContent: () => void
 };
 
 const Editor = (props: Props) => {
-  const { content, updateContent, showLines, aceTheme, aceMode } = props;
+  const { content, updateContent, lightTheme } = props;
 
-  const defaults = {
-    aceMode: 'text',
-    aceTheme: 'monokai',
-    showLines: true
-  };
+  console.log('THEME');
+  console.log(lightTheme);
 
   return (
     <AceEditor
-      mode={aceMode || defaults.aceMode}
-      theme={aceTheme || defaults.aceTheme}
+      mode="json"
+      theme={lightTheme ? 'github' : 'monokai'}
       name="contents"
       fontSize={12}
       showPrintMargin={false}
-      showGutter={showLines || defaults.showLines}
-      height="355px"
+      height="100%"
       width="100%"
       highlightActiveLine
       value={content}
       onChange={updateContent}
       setOptions={{
         showLineNumbers: true,
-        enableLiveAutocompletion: true,
-        enableBasicAutocompletion: true,
         tabSize: 2
       }}
     />

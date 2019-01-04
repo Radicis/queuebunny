@@ -22,8 +22,9 @@ type Props = {
 };
 
 const styles = () => ({
-  grow: {
-    flexGrow: 1
+  select: {
+    flexGrow: 1,
+    overflow: 'hidden'
   },
   button: {
     marginRight: 10
@@ -68,7 +69,6 @@ class QueueOptions extends Component<Props> {
       classes,
       exchanges,
       bindExchanges,
-      createConnection,
       connection,
       clearMessages
     } = this.props;
@@ -76,7 +76,7 @@ class QueueOptions extends Component<Props> {
 
     return (
       <Grid container spacing={24} direction="row" alignItems="stretch">
-        <Grid item className={classes.grow}>
+        <Grid item className={classes.select}>
           <Select
             multiple
             disabled={!connection}
@@ -105,7 +105,7 @@ class QueueOptions extends Component<Props> {
             color="primary"
             className={classes.button}
             onClick={() => bindExchanges(selectedExchanges)}
-            disabled={!connection || _.isEmpty(selectedExchanges)}
+            disabled={!connection}
           >
             Bind
           </Button>

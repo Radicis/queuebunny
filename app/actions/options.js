@@ -40,12 +40,10 @@ export function setOptions(options) {
 export function updateOptions(updatedOptions) {
   return (dispatch: Dispatch, getState: GetState) => {
     // Get the current options from the state
-    const options = getState().options.options;
+    const { options } = getState().options;
 
     // Assign new values
-    let newOptions = _.assign({}, options, updatedOptions);
-
-    console.log(newOptions);
+    const newOptions = _.assign({}, options, updatedOptions);
 
     // Update the store with the new values
     JSONStore.set('options', newOptions);

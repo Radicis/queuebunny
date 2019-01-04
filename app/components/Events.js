@@ -7,23 +7,21 @@ import Select from '@material-ui/core/Select';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
 
 import AddEvent from '../dialogs/AddEvent';
 import Editor from './Editor';
 
 const styles = () => ({
-  grow: {
-    flexGrow: 1
+  editor: {
+    flexGrow: 1,
+    height: 'calc(100% - 250px)'
   },
   fullHeight: {
     height: '100%'
   },
   button: {
     marginRight: 10
-  },
-  buttonGrow: {
-    marginRight: 10,
-    flexGrow: 1
   }
 });
 
@@ -38,7 +36,8 @@ type Props = {
   events: Array,
   exchanges: Array,
   selectedEvent: object,
-  classes: object
+  classes: object,
+  lightTheme: boolean
 };
 
 class Events extends Component<Props> {
@@ -81,10 +80,25 @@ class Events extends Component<Props> {
     });
   };
 
+  handleRoutingKeyChange = e => {
+    const { updateEvent, selectedEvent } = this.props;
+    updateEvent(selectedEvent.id, {
+      routingKey: e.target.value
+    });
+  };
+
   handlePublish = () => {
     const { publish, selectedEvent } = this.props;
-    const { exchange } = selectedEvent;
-    publish(exchange, 'test', JSON.stringify({ hello: true }));
+    const { exchange, routingKey, content } = selectedEvent;
+    publish(exchange, routingKey, JSON.stringify(content || {}));
+  };
+
+  handlePublish100 = () => {
+    const { publish, selectedEvent } = this.props;
+    const { exchange, routingKey, content } = selectedEvent;
+    for (let i = 0; i < 100; i += 1) {
+      publish(exchange, routingKey, JSON.stringify(content || {}));
+    }
   };
 
   updateEventContent = content => {
@@ -95,15 +109,19 @@ class Events extends Component<Props> {
     });
   };
 
+  handleDelete = () => {
+    console.log('Delete');
+  };
+
   render() {
     const {
       classes,
       addEvent,
-      deleteEvent,
       selectedEvent,
       events,
       connection,
-      exchanges
+      exchanges,
+      lightTheme
     } = this.props;
 
     const { dialogAddEventOpen } = this.state;
@@ -112,27 +130,23 @@ class Events extends Component<Props> {
       <Grid
         container
         spacing={24}
-        direction="column"
-        alignItems="stretch"
+        direction="row"
         className={classes.fullHeight}
       >
-        <Grid item>
+        <Grid item xs={12}>
           <Select
             value={selectedEvent ? selectedEvent.id : ' '}
             onChange={this.handleEventChange}
             fullWidth
           >
-            <MenuItem value=" ">
-              <em>Select Event</em>
-            </MenuItem>
             {events.map(e => (
               <MenuItem value={e.id}>{e.name}</MenuItem>
             ))}
           </Select>
         </Grid>
-        <Grid item>
+        <Grid item xs={12}>
           <Select
-            disabled={!connection}
+            disabled={!(selectedEvent && connection)}
             value={
               selectedEvent && selectedEvent.exchange
                 ? selectedEvent.exchange.name
@@ -141,16 +155,24 @@ class Events extends Component<Props> {
             onChange={this.handleExchangeChange}
             fullWidth
           >
-            <MenuItem value=" ">
-              <em>Select Exchange</em>
-            </MenuItem>
             {exchanges.map(e => (
               <MenuItem value={e.name}>{e.name}</MenuItem>
             ))}
           </Select>
         </Grid>
-        <Grid item className={classes.grow}>
+        <Grid item xs={12}>
+          <TextField
+            disabled={!(selectedEvent && connection)}
+            required
+            margin="dense"
+            value={selectedEvent.routingKey}
+            onChange={this.handleRoutingKeyChange}
+            fullWidth
+          />
+        </Grid>
+        <Grid item className={classes.editor} xs={12}>
           <Editor
+            lightTheme={lightTheme}
             content={selectedEvent.content}
             updateContent={this.updateEventContent}
           />
@@ -165,13 +187,44 @@ class Events extends Component<Props> {
             Add New
           </Button>
           <Button
+            onClick={this.handleDelete}
+            className={classes.button}
             variant="contained"
-            className={classes.buttonGrow}
+            color="secondary"
+          >
+            Delete
+          </Button>
+          <Button
+            variant="contained"
+            className={classes.button}
             color="primary"
             onClick={this.handlePublish}
-            disabled={!connection || !(selectedEvent || selectedEvent.exchange)}
+            disabled={
+              !(
+                connection &&
+                selectedEvent &&
+                selectedEvent.exchange &&
+                selectedEvent.routingKey
+              )
+            }
           >
             Send it
+          </Button>
+          <Button
+            variant="contained"
+            className={classes.button}
+            color="primary"
+            onClick={this.handlePublish100}
+            disabled={
+              !(
+                connection &&
+                selectedEvent &&
+                selectedEvent.exchange &&
+                selectedEvent.routingKey
+              )
+            }
+          >
+            Send 100
           </Button>
         </Grid>
         <AddEvent

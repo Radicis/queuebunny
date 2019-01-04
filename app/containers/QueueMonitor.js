@@ -13,10 +13,17 @@ import * as AmqpActions from '../actions/amqp';
 
 import MessageList from '../components/MessageList';
 import QueueOptions from '../components/QueueOptions';
+import ShowMessage from '../dialogs/ShowMessage';
 
 const styles = () => ({
   container: {
-    height: '100%'
+    height: 'calc(100% - 70px)',
+    width: '100%',
+    overflow: 'hidden'
+  },
+  fullHeight: {
+    height: '100%',
+    overflow: 'auto'
   }
 });
 
@@ -29,7 +36,6 @@ type Props = {
   setExchanges: () => void,
   reset: () => void,
   bindExchanges: () => void,
-  createConnection: () => void,
   setConnection: () => void,
   clearMessages: () => void,
   classes: object
@@ -39,7 +45,9 @@ class QueueMonitor extends Component<Props> {
   props: Props;
 
   state = {
-    messageFeedVisible: false
+    messageFeedVisible: false,
+    showMessageOpen: false,
+    message: {}
   };
 
   componentDidMount() {
@@ -54,12 +62,34 @@ class QueueMonitor extends Component<Props> {
       });
     });
     ipcRenderer.on('message', (e, msg) => {
+      console.log('Got Message');
+      console.log(msg);
       addMessage(msg);
     });
     ipcRenderer.on('error', () => {
       reset();
     });
   }
+
+  componentWillUnmount() {
+    ipcRenderer.on('ready', false);
+    ipcRenderer.on('bindComplete', false);
+    ipcRenderer.on('message', false);
+    ipcRenderer.on('error', false);
+  }
+
+  openShowMessage = message => {
+    this.setState({
+      showMessageOpen: true,
+      message
+    });
+  };
+
+  closeDialogs = () => {
+    this.setState({
+      showMessageOpen: false
+    });
+  };
 
   render() {
     const {
@@ -70,24 +100,48 @@ class QueueMonitor extends Component<Props> {
       connection,
       clearMessages
     } = this.props;
-    const { messageFeedVisible } = this.state;
+    const {
+      messageFeedVisible,
+      showMessageOpen,
+      shownMessage,
+      message
+    } = this.state;
     return (
-      <Grid container direction="column">
-        <Grid item>
-          <QueueOptions
-            exchanges={exchanges}
-            connection={connection}
-            bindExchanges={bindExchanges}
-            clearMessages={clearMessages}
-          />
+      <div className={classes.container}>
+        <Grid
+          container
+          direction="row"
+          justify="space-around"
+          alignItems="center"
+          spacing={16}
+          className={classes.container}
+        >
+          <Grid item xs={12}>
+            <QueueOptions
+              exchanges={exchanges}
+              connection={connection}
+              bindExchanges={bindExchanges}
+              clearMessages={clearMessages}
+            />
+          </Grid>
+          <Grid item className={classes.fullHeight} xs={12}>
+            <MessageList
+              messages={messages}
+              showMessage={this.openShowMessage}
+              messageFeedVisible={messageFeedVisible}
+            />
+          </Grid>
         </Grid>
-        <Grid item>
-          <MessageList
-            messages={messages}
-            messageFeedVisible={messageFeedVisible}
+        {showMessageOpen ? (
+          <ShowMessage
+            showMessage={shownMessage}
+            message={message}
+            handleOk={this.closeDialogs}
           />
-        </Grid>
-      </Grid>
+        ) : (
+          ''
+        )}
+      </div>
     );
   }
 }

@@ -31,8 +31,7 @@ type Props = {
   lightTheme: boolean,
   handleClose: () => void,
   handleOk: () => void,
-  purgeEvents: () => void,
-  classes: object
+  purgeEvents: () => void
 };
 
 class SetOptions extends Component<Props> {
@@ -67,7 +66,7 @@ class SetOptions extends Component<Props> {
   };
 
   render() {
-    const { classes, open, handleClose, purgeEvents } = this.props;
+    const { open, handleClose, purgeEvents } = this.props;
     const { lightTheme } = this.state;
     return (
       <Dialog
@@ -97,7 +96,7 @@ class SetOptions extends Component<Props> {
           <Button onClick={handleClose} color="secondary">
             Cancel
           </Button>
-          <Button onClick={this.handleOk} color="secondary">
+          <Button onClick={this.handleOk} color="primary" variant="contained">
             Ok
           </Button>
         </DialogActions>

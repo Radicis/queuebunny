@@ -47,11 +47,14 @@ export function updateEvent(updatedEventId, updatedEvent) {
   return (dispatch: Dispatch) => {
     // Get events from the store
     let storeEvents = JSONStore.get('events') || [];
+
     _.isArray(storeEvents) ? null : (storeEvents = []);
 
+    console.log('Updating event..');
+
     // Update the item in the store
-    _.map(storeEvents, i =>
-      i.id === updatedEventId ? _.assign(i, updatedEvent) : i
+    storeEvents = _.map(storeEvents, i =>
+      i.id === updatedEventId ? _.assign({}, i, updatedEvent) : i
     );
 
     // Update the store with the new values
@@ -59,6 +62,7 @@ export function updateEvent(updatedEventId, updatedEvent) {
 
     // Update the item in the state
     dispatch(setEvents(storeEvents));
+    dispatch(selectEvent(updatedEventId));
   };
 }
 
@@ -66,8 +70,6 @@ export function addEvent(newEventName) {
   return (dispatch: Dispatch) => {
     // Get events from the store
     let storeEvents = JSONStore.get('events') || [];
-
-    console.log(storeEvents);
 
     _.isArray(storeEvents) ? null : (storeEvents = []);
 

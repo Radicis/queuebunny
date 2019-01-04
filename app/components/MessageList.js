@@ -6,14 +6,33 @@ import _ from 'lodash';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
 
-const styles = () => ({});
+const styles = () => ({
+  itemText: {
+    fontSize: '14px'
+  },
+  itemTextFaded: {
+    fontSize: '14px',
+    marginRight: 5,
+    color: '#ccc'
+  },
+  item: {
+    padding: 5,
+    borderRadius: 5,
+    '&:hover': {
+      backgroundColor: 'rgba(238,238,238,0.2)'
+    }
+  },
+  itemList: {
+    height: '100%',
+    overflow: 'auto'
+  }
+});
 
 type Props = {
   messages: Array,
   classes: object,
-  messageFeedVisible: boolean
+  showMessage: () => void
 };
 
 class MessageList extends Component<Props> {
@@ -21,34 +40,29 @@ class MessageList extends Component<Props> {
 
   state = {};
 
-  parseMsg = content => {
-    try {
-      JSON.stringify(JSON.parse(content.toString()), null, 2);
-    } catch {
-      return content.toString();
-    }
-  };
-
   render() {
-    const { classes, messages, messageFeedVisible } = this.props;
+    const { classes, messages, showMessage } = this.props;
     return (
-      <List disabled={!messageFeedVisible}>
-        {_.map(messages, m => (
-          <ListItem>
-            <ListItemText
-              primary={m.fields.routingKey}
-              secondary={
-                <React.Fragment>
-                  <Typography component="span" color="textPrimary">
-                    <pre>{this.parseMsg(m.content)}</pre>
-                  </Typography>
-                  {m.fields.exchange}
-                </React.Fragment>
-              }
-            />
-          </ListItem>
-        ))}
-      </List>
+      <div>
+        <List className={classes.itemList}>
+          {_.map(messages, m => (
+            <ListItem className={classes.item} onClick={() => showMessage(m)}>
+              <ListItemText
+                primary={
+                  <React.Fragment>
+                    <span className={classes.itemTextFaded}>
+                      {m.fields.exchange}
+                    </span>
+                    <span className={classes.itemText}>
+                      {m.fields.routingKey}
+                    </span>
+                  </React.Fragment>
+                }
+              />
+            </ListItem>
+          ))}
+        </List>
+      </div>
     );
   }
 }

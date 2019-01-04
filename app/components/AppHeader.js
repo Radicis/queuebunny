@@ -1,9 +1,9 @@
 // @flow
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { bindActionCreators } from 'redux';
-import _ from 'lodash';
-import connect from 'react-redux/es/connect/connect';
+
+import classNames from 'classnames';
+
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -12,20 +12,40 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Settings from '@material-ui/icons/Settings';
 import AutoRenew from '@material-ui/icons/Autorenew';
 
-import * as OptionsActions from '../actions/options';
-import * as EventActions from '../actions/events';
-import * as AmqpActions from '../actions/amqp';
-
 import SetOptions from '../dialogs/SetOptions';
 
-const styles = () => ({
+const drawerWidth = 440;
+
+const styles = theme => ({
   grow: {
     flexGrow: 1
+  },
+  appBar: {
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    })
+  },
+  appBarShift: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawerWidth,
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen
+    })
+  },
+  menuButton: {
+    marginLeft: 12,
+    marginRight: 20
+  },
+  hide: {
+    display: 'none'
   }
 });
 
 type Props = {
   updateOptions: () => void,
+  menuCollapsed: boolean,
   toggleMenuCollapse: () => void,
   purgeEvents: () => void,
   createConnection: () => void,
@@ -71,14 +91,21 @@ class AppHeader extends Component<Props> {
       lightTheme,
       createConnection,
       purgeEvents,
-      toggleMenuCollapse
+      toggleMenuCollapse,
+      menuCollapsed
     } = this.props;
 
     const { dialogOptionsOpen } = this.state;
     return (
       <div>
-        <AppBar position="sticky" color="primary">
-          <Toolbar>
+        <AppBar
+          color="primary"
+          position="fixed"
+          className={classNames(classes.appBar, {
+            [classes.appBarShift]: !menuCollapsed
+          })}
+        >
+          <Toolbar disableGutters={menuCollapsed}>
             <IconButton
               onClick={toggleMenuCollapse}
               color="inherit"
@@ -90,6 +117,7 @@ class AppHeader extends Component<Props> {
               variant="title"
               color="inherit"
               className={classes.grow}
+              noWrap
             >
               Queue Bunny
             </Typography>
@@ -114,18 +142,4 @@ class AppHeader extends Component<Props> {
   }
 }
 
-const mapStateToProps = state => ({
-  options: state.options.options,
-  menuCollapsed: state.options.menuCollapsed
-});
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    _.assign({}, OptionsActions, EventActions, AmqpActions),
-    dispatch
-  );
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(styles)(AppHeader));
+export default withStyles(styles)(AppHeader);

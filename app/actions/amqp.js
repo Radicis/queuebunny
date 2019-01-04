@@ -26,7 +26,7 @@ export function publish(exchange, routingKey, content) {
     ipcRenderer.send('publish', {
       exchangeName: exchange.name,
       routingKey,
-      content
+      content: JSON.parse(content)
     });
   };
 }

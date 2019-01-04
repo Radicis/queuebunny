@@ -67,7 +67,8 @@ class AddEvent extends Component<Props> {
           <Button
             disabled={!newItemName}
             onClick={this.handleOk}
-            color="secondary"
+            color="primary"
+            variant="contained"
           >
             Ok
           </Button>

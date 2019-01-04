@@ -9,57 +9,50 @@ import {
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 
+import Drawer from '@material-ui/core/Drawer';
 import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
+
+import classNames from 'classnames';
 
 import * as OptionsActions from '../actions/options';
 import * as AmqpActions from '../actions/amqp';
+import * as EventActions from '../actions/events';
 
-import AppHeader from './AppHeader';
+import AppHeader from '../components/AppHeader';
 import Event from './Event';
 
-const drawerWidth = 240;
+const drawerWidth = 440;
 
 const styles = theme => ({
+  fullHeight: {
+    height: '100%'
+  },
   mainContainer: {
     height: 'calc(100% - 16px)',
     padding: theme.spacing.unit * 2,
     overflow: 'hidden',
     borderRadius: 0
   },
-  fullHeight: {
-    height: '100%'
+  padding: {
+    padding: 15
   },
   root: {
-    display: 'flex'
-  },
-  appBar: {
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
-  },
-  appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  },
-  menuButton: {
-    marginLeft: 12,
-    marginRight: 20
+    display: 'flex',
+    height: 'calc(100% + 80px)',
+    overflow: 'hidden',
+    borderRadius: 0
   },
   hide: {
     display: 'none'
   },
   drawer: {
     width: drawerWidth,
-    flexShrink: 0
+    flexShrink: 0,
+    padding: 15
   },
   drawerPaper: {
-    width: drawerWidth
+    width: drawerWidth,
+    padding: 15
   },
   drawerHeader: {
     display: 'flex',
@@ -70,12 +63,13 @@ const styles = theme => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing.unit * 3,
+    width: '100%',
+    padding: 0,
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     }),
-    marginLeft: -drawerWidth
+    marginLeft: -(drawerWidth + 30)
   },
   contentShift: {
     transition: theme.transitions.create('margin', {
@@ -89,8 +83,13 @@ const styles = theme => ({
 type Props = {
   options: object,
   menuCollapsed: boolean,
+  toggleMenuCollapse: () => void,
   getOptionsFromStore: () => void,
+  purgeEvents: () => void,
   children: React.Node,
+  updateOptions: () => void,
+  purgeEvents: () => void,
+  lightTheme: boolean,
   createConnection: () => void,
   classes: object
 };
@@ -159,40 +158,51 @@ class App extends Component<Props> {
   }
 
   render() {
-    const { classes, children, options, menuCollapsed } = this.props;
+    const {
+      classes,
+      children,
+      menuCollapsed,
+      purgeEvents,
+      updateOptions,
+      toggleMenuCollapse,
+      createConnection,
+      lightTheme
+    } = this.props;
     const { theme } = this.state;
     return (
       <MuiThemeProvider theme={theme}>
-        <AppHeader options={options} menuCollapsed={menuCollapsed} />
-        <Paper className={classes.mainContainer}>
-          {menuCollapsed ? (
-            <Grid
-              container
-              spacing={24}
-              alignItems="stretch"
-              className={classes.fullHeight}
-            >
-              <Grid item xs={12} className={classes.fullHeight}>
-                <React.Fragment>{children}</React.Fragment>
-              </Grid>
-            </Grid>
-          ) : (
-            <Grid
-              container
-              spacing={24}
-              alignItems="stretch"
-              className={classes.fullHeight}
-            >
-              <Grid item xs={4} className={classes.fullHeight}>
-                <Event />
-              </Grid>
+        <div className={classes.root}>
+          <AppHeader
+            updateOptions={updateOptions}
+            menuCollapsed={menuCollapsed}
+            toggleMenuCollapse={toggleMenuCollapse}
+            purgeEvents={purgeEvents}
+            createConnection={createConnection}
+            lightTheme={lightTheme}
+          />
 
-              <Grid item xs={8} className={classes.fullHeight}>
-                <React.Fragment>{children}</React.Fragment>
-              </Grid>
-            </Grid>
-          )}
-        </Paper>
+          <Drawer
+            className={classes.drawer}
+            variant="persistent"
+            anchor="left"
+            open={!menuCollapsed}
+            classes={{
+              paper: classes.drawerPaper
+            }}
+          >
+            <Event />
+          </Drawer>
+          <main
+            className={classNames(classes.content, {
+              [classes.contentShift]: !menuCollapsed
+            })}
+          >
+            <div className={classes.drawerHeader} />
+            <Paper className={classes.mainContainer}>
+              <React.Fragment>{children}</React.Fragment>
+            </Paper>
+          </main>
+        </div>
       </MuiThemeProvider>
     );
   }
@@ -200,11 +210,12 @@ class App extends Component<Props> {
 
 const mapStateToProps = state => ({
   options: state.options.options,
-  menuCollapsed: state.options.menuCollapsed
+  menuCollapsed: state.options.menuCollapsed,
+  lightTheme: state.options.lightTheme
 });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators(_.assign({}, OptionsActions, AmqpActions), dispatch);
+  bindActionCreators(_.assign({}, OptionsActions, AmqpActions, EventActions), dispatch);
 
 export default connect(
   mapStateToProps,

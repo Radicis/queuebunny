@@ -24,6 +24,10 @@ class AMQP {
 
     console.log(`Connecting to: amqp://${self.amqpOptions.host}`);
 
+    try {
+      self._channel.deleteQueue(self.amqpOptions.queue);
+    } catch { }
+
     self
       .setUp()
       .then(exchanges => {

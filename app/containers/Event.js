@@ -12,25 +12,12 @@ import Events from '../components/Events';
 
 const styles = () => ({});
 
-type Props = {
-  selectEvent: () => void,
-  addEvent: () => void,
-  deleteEvent: () => void,
-  updateEvent: () => void,
-  publish: () => void,
-  getEventsFromStore: () => void,
-  events: Array,
-  exchanges: Array,
-  selectedEvent: object,
-  connection: boolean,
-  classes: object
-};
-
 const mapStateToProps = state => ({
   events: state.events.events,
   exchanges: state.amqp.exchanges,
   selectedEvent: state.events.selectedEvent,
-  connection: state.amqp.connection
+  connection: state.amqp.connection,
+  lightTheme: state.options.lightTheme
 });
 
 const mapDispatchToProps = dispatch =>
