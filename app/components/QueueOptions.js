@@ -24,6 +24,9 @@ type Props = {
 const styles = () => ({
   grow: {
     flexGrow: 1
+  },
+  button: {
+    marginRight: 10
   }
 });
 
@@ -74,45 +77,46 @@ class QueueOptions extends Component<Props> {
     return (
       <Grid container spacing={24} direction="row" alignItems="stretch">
         <Grid item className={classes.grow}>
-          <FormControl fullWidth>
-            <InputLabel htmlFor="select-multiple">Select Exchanges</InputLabel>
-            <Select
-              multiple
-              disabled={!connection}
-              className={classes.grow}
-              value={_.map(selectedExchanges, ex => ex.name)}
-              onChange={this.handleSelectedExchangesChange}
-              input={<Input id="select-multiple-chip" />}
-              renderValue={selected => (
-                <div>
-                  {selected.map(value => (
-                    <Chip key={value} label={value} />
-                  ))}
-                </div>
-              )}
-            >
-              {exchanges.map(e => (
-                <MenuItem value={e.name} style={this.getStyles(e, this)}>
-                  {e.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <Select
+            multiple
+            disabled={!connection}
+            fullWidth
+            value={_.map(selectedExchanges, ex => ex.name)}
+            onChange={this.handleSelectedExchangesChange}
+            input={<Input id="select-multiple-chip" />}
+            renderValue={selected => (
+              <div>
+                {selected.map(value => (
+                  <Chip key={value} label={value} />
+                ))}
+              </div>
+            )}
+          >
+            {exchanges.map(e => (
+              <MenuItem value={e.name} style={this.getStyles(e, this)}>
+                {e.name}
+              </MenuItem>
+            ))}
+          </Select>
         </Grid>
         <Grid item>
-          <FormControl>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => bindExchanges(selectedExchanges)}
-              disabled={!connection || _.isEmpty(selectedExchanges)}
-            >
-              Bind
-            </Button>
-            <Button variant="contained" color="inherit" onClick={clearMessages}>
-              Clear
-            </Button>
-          </FormControl>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={() => bindExchanges(selectedExchanges)}
+            disabled={!connection || _.isEmpty(selectedExchanges)}
+          >
+            Bind
+          </Button>
+          <Button
+            variant="contained"
+            color="inherit"
+            className={classes.button}
+            onClick={clearMessages}
+          >
+            Clear
+          </Button>
         </Grid>
       </Grid>
     );

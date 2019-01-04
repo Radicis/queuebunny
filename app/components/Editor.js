@@ -32,7 +32,7 @@ const Editor = (props: Props) => {
       fontSize={12}
       showPrintMargin={false}
       showGutter={showLines || defaults.showLines}
-      height="365px"
+      height="355px"
       width="100%"
       highlightActiveLine
       value={content}

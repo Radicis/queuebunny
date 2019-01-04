@@ -17,6 +17,13 @@ const styles = () => ({
   },
   fullHeight: {
     height: '100%'
+  },
+  button: {
+    marginRight: 10
+  },
+  buttonGrow: {
+    marginRight: 10,
+    flexGrow: 1
   }
 });
 
@@ -151,6 +158,7 @@ class Events extends Component<Props> {
         <Grid item>
           <Button
             onClick={this.openOptionsDialog}
+            className={classes.button}
             variant="contained"
             color="primary"
           >
@@ -158,6 +166,7 @@ class Events extends Component<Props> {
           </Button>
           <Button
             variant="contained"
+            className={classes.buttonGrow}
             color="primary"
             onClick={this.handlePublish}
             disabled={!connection || !(selectedEvent || selectedEvent.exchange)}
