@@ -46,14 +46,8 @@ type Props = {
 class ShowMessage extends Component<Props> {
   props: Props;
 
-  handleOk = () => {
-    const { handleOk } = this.props;
-    const updatedOptions = _.assign({}, this.state);
-    handleOk(updatedOptions);
-  };
-
   render() {
-    const { classes, lightTheme, message } = this.props;
+    const { classes, lightTheme, message, handleOk } = this.props;
     return (
       <Dialog open fullScreen>
         <DialogTitle>Message Details</DialogTitle>
@@ -92,7 +86,7 @@ class ShowMessage extends Component<Props> {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" onClick={this.handleOk} color="primary">
+          <Button variant="contained" onClick={handleOk} color="primary">
             Ok
           </Button>
         </DialogActions>

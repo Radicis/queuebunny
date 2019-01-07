@@ -125,7 +125,9 @@ ipcMain.on('createConnection', (e, options) => {
     // Strip out system exchanges
     const validExchanges = _.filter(
       exchanges,
-      ex => blackList.indexOf(ex.name) === -1
+      ex =>
+        blackList.indexOf(ex.name) === -1 &&
+        !ex.name.includes('inspection.mobile')
     );
     mainWindow.send('ready', validExchanges);
   });
@@ -147,8 +149,11 @@ amqp.on('message', msg => {
   mainWindow.send('message', msg);
 });
 
-amqp.on('error', () => {
-  mainWindow.send('error');
+amqp.on('error', err => {
+  if (!err) {
+    err = 'Unknown';
+  }
+  mainWindow.send('error', err);
 });
 
 ipcMain.on('publish', (e, msg) => {

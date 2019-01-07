@@ -5,11 +5,16 @@ import type { Dispatch, GetState } from '../reducers/types';
 export const SET_CONNECTION = 'SET_CONNECTION';
 export const SET_EXCHANGES = 'SET_EXCHANGES';
 export const SET_PAUSED = 'SET_PAUSED';
+export const SET_LOADING = 'SET_LOADING';
 
 export function createConnection() {
   return (dispatch: Dispatch, getState: GetState) => {
     const { options } = getState().options;
+    dispatch(setLoading(true));
     ipcRenderer.send('createConnection', options);
+    ipcRenderer.on('ready', () => {
+      dispatch(setLoading(false));
+    });
     reset();
   };
 }
@@ -49,6 +54,13 @@ export function resumeMessages() {
   return (dispatch: Dispatch) => {
     ipcRenderer.send('resume');
     dispatch(setPaused(false));
+  };
+}
+
+export function setLoading(loading) {
+  return {
+    type: SET_LOADING,
+    loading
   };
 }
 

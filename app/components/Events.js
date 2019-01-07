@@ -15,7 +15,7 @@ import Editor from './Editor';
 const styles = () => ({
   editor: {
     flexGrow: 1,
-    height: 'calc(100% - 250px)'
+    height: 'calc(100% - 260px)'
   },
   fullHeight: {
     height: '100%'
@@ -162,44 +162,54 @@ class Events extends Component<Props> {
           </Select>
         </Grid>
         <Grid item xs={12}>
-          <Select
-            disabled={!(selectedEvent && connection)}
-            value={
-              selectedEvent && selectedEvent.exchange
-                ? selectedEvent.exchange.name
-                : ' '
-            }
-            onChange={this.handleExchangeChange}
-            fullWidth
-          >
-            {_.isEmpty(exchanges) ? (
-              <MenuItem value="">No Exchanges</MenuItem>
-            ) : (
-              ''
-            )}
-            {exchanges.map(e => (
-              <MenuItem key={e.name} value={e.name}>
-                {e.name}
-              </MenuItem>
-            ))}
-          </Select>
+          {selectedEvent ? (
+            <Select
+              value={
+                selectedEvent && selectedEvent.exchange
+                  ? selectedEvent.exchange.name
+                  : ' '
+              }
+              onChange={this.handleExchangeChange}
+              fullWidth
+            >
+              {_.isEmpty(exchanges) ? (
+                <MenuItem value="">No Exchanges</MenuItem>
+              ) : (
+                ''
+              )}
+              {exchanges.map(e => (
+                <MenuItem key={e.name} value={e.name}>
+                  {e.name}
+                </MenuItem>
+              ))}
+            </Select>
+          ) : (
+            ''
+          )}
         </Grid>
         <Grid item xs={12}>
-          <TextField
-            disabled={!(selectedEvent && connection)}
-            required
-            margin="dense"
-            value={selectedEvent ? selectedEvent.routingKey : ' '}
-            onChange={this.handleRoutingKeyChange}
-            fullWidth
-          />
+          {selectedEvent ? (
+            <TextField
+              required
+              margin="dense"
+              value={selectedEvent ? selectedEvent.routingKey : ' '}
+              onChange={this.handleRoutingKeyChange}
+              fullWidth
+            />
+          ) : (
+            ''
+          )}
         </Grid>
         <Grid item className={classes.editor} xs={12}>
-          <Editor
-            lightTheme={lightTheme}
-            content={selectedEvent ? selectedEvent.content : ' '}
-            updateContent={this.updateEventContent}
-          />
+          {selectedEvent ? (
+            <Editor
+              lightTheme={lightTheme}
+              content={selectedEvent ? selectedEvent.content : ' '}
+              updateContent={this.updateEventContent}
+            />
+          ) : (
+            ''
+          )}
         </Grid>
         <Grid item>
           <Button

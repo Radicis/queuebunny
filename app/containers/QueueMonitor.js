@@ -14,6 +14,7 @@ import * as AmqpActions from '../actions/amqp';
 import MessageList from '../components/MessageList';
 import QueueOptions from '../components/QueueOptions';
 import ShowMessage from '../dialogs/ShowMessage';
+import ShowError from '../dialogs/ShowError';
 
 const styles = () => ({
   container: {
@@ -50,11 +51,18 @@ class QueueMonitor extends Component<Props> {
   state = {
     messageFeedVisible: false,
     showMessageOpen: false,
+    showErrorOpen: false,
+    currentError: null,
     message: {}
   };
 
   componentDidMount() {
-    const { setExchanges, addMessage, createConnection, setConnection } = this.props;
+    const {
+      setExchanges,
+      addMessage,
+      createConnection,
+      setConnection
+    } = this.props;
     ipcRenderer.on('ready', (e, exchanges) => {
       setExchanges(exchanges);
       setConnection(true);
@@ -67,8 +75,10 @@ class QueueMonitor extends Component<Props> {
     ipcRenderer.on('message', (e, msg) => {
       addMessage(msg);
     });
-    ipcRenderer.on('error', () => {
-      createConnection();
+    ipcRenderer.on('error', (e, err) => {
+      // createConnection();
+      console.log(err);
+      // this.displayError(err || null);
     });
   }
 
@@ -77,6 +87,13 @@ class QueueMonitor extends Component<Props> {
     ipcRenderer.on('bindComplete', false);
     ipcRenderer.on('message', false);
     ipcRenderer.on('error', false);
+  }
+
+  displayError(currentError) {
+    this.setState({
+      showErrorOpen: true,
+      currentError
+    });
   }
 
   openShowMessage = message => {
@@ -88,7 +105,8 @@ class QueueMonitor extends Component<Props> {
 
   closeDialogs = () => {
     this.setState({
-      showMessageOpen: false
+      showMessageOpen: false,
+      showErrorOpen: false
     });
   };
 
@@ -108,7 +126,9 @@ class QueueMonitor extends Component<Props> {
       messageFeedVisible,
       showMessageOpen,
       shownMessage,
-      message
+      message,
+      showErrorOpen,
+      currentError
     } = this.state;
     return (
       <div className={classes.container}>
@@ -145,6 +165,11 @@ class QueueMonitor extends Component<Props> {
             message={message}
             handleOk={this.closeDialogs}
           />
+        ) : (
+          ''
+        )}
+        {showErrorOpen ? (
+          <ShowError error={currentError} handleOk={this.closeDialogs} />
         ) : (
           ''
         )}

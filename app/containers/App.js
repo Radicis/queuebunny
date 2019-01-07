@@ -11,6 +11,7 @@ import _ from 'lodash';
 
 import Drawer from '@material-ui/core/Drawer';
 import Paper from '@material-ui/core/Paper';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import classNames from 'classnames';
 
@@ -92,6 +93,7 @@ type Props = {
   purgeEvents: () => void,
   lightTheme: boolean,
   createConnection: () => void,
+  loading: boolean,
   classes: object
 };
 
@@ -178,13 +180,15 @@ class App extends Component<Props> {
       createConnection,
       lightTheme,
       amqpOptions,
-      httpOptions
+      httpOptions,
+      loading
     } = this.props;
     const { theme } = this.state;
     return (
       <MuiThemeProvider theme={theme}>
         <div className={classes.root}>
           <AppHeader
+            loading={loading}
             httpOptions={httpOptions}
             amqpOptions={amqpOptions}
             updateOptions={updateOptions}
@@ -226,7 +230,8 @@ const mapStateToProps = state => ({
   httpOptions: state.options.options.httpOptions,
   amqpOptions: state.options.options.amqpOptions,
   menuCollapsed: state.options.menuCollapsed,
-  lightTheme: state.options.lightTheme
+  lightTheme: state.options.lightTheme,
+  loading: state.amqp.loading
 });
 
 const mapDispatchToProps = dispatch =>

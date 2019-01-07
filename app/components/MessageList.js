@@ -47,10 +47,7 @@ class MessageList extends Component<Props> {
       <div>
         <List className={classes.itemList}>
           {_.map(messages, m => (
-            <ListItem
-              className={classes.item}
-              onClick={() => showMessage(m)}
-            >
+            <ListItem className={classes.item} onClick={() => showMessage(m)}>
               <ListItemText
                 primary={
                   <React.Fragment>

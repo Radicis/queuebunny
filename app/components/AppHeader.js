@@ -11,6 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Settings from '@material-ui/icons/Settings';
 import AutoRenew from '@material-ui/icons/Autorenew';
+import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 
 import SetOptions from '../dialogs/SetOptions';
 
@@ -52,6 +53,7 @@ type Props = {
   lightTheme: boolean,
   httpOptions: object,
   amqpOptions: object,
+  loading: boolean,
   classes: object
 };
 
@@ -96,7 +98,8 @@ class AppHeader extends Component<Props> {
       toggleMenuCollapse,
       menuCollapsed,
       httpOptions,
-      amqpOptions
+      amqpOptions,
+      loading
     } = this.props;
 
     const { dialogOptionsOpen } = this.state;
@@ -132,6 +135,8 @@ class AppHeader extends Component<Props> {
               <Settings />
             </IconButton>
           </Toolbar>
+
+          {loading ? <LinearProgress /> : ''}
         </AppBar>
 
         {dialogOptionsOpen ? (

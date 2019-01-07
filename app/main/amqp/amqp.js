@@ -37,6 +37,9 @@ class AMQP {
         cb(null, self._exchanges);
       })
       .catch(err => {
+        console.log('Error');
+        console.log(err);
+        self._emmitter.emit('error', err);
         cb(err);
       });
   }
@@ -48,7 +51,9 @@ class AMQP {
     self._channel = null;
     return amqp
       .connect(
-        `${self.amqpOptions.protocol}://${self.amqpOptions.host}?heartbeat=2`
+        `${self.amqpOptions.protocol}://${self.amqpOptions.username}:${
+          self.amqpOptions.password
+        }@${self.amqpOptions.host}`
       )
       .then(conn => {
         self._conn = conn;
@@ -66,9 +71,9 @@ class AMQP {
       )
       .then(() => self.getExchanges())
       .catch(err => {
-        console.log('Error');
+        console.log('Error in Setup');
         console.log(err);
-        self._emmitter.emit('error');
+        self._emmitter.emit('error', err);
       });
   }
 
@@ -131,9 +136,9 @@ class AMQP {
         });
       })
       .catch(err => {
-        console.log('ERROR');
+        console.log('Error in BindExchanges');
         console.log(err);
-        self._emmitter.emit('error');
+        self._emmitter.emit('error', err);
       });
   }
 
@@ -144,9 +149,9 @@ class AMQP {
     try {
       self._channel.publish(exchangeName, routingKey, Buffer.from(content));
     } catch (err) {
-      console.log('ERROR');
+      console.log('Error in Publish');
       console.log(err);
-      self._emmitter.emit('error');
+      self._emmitter.emit('error', err);
     }
   }
 
