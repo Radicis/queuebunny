@@ -81,7 +81,8 @@ const styles = theme => ({
 });
 
 type Props = {
-  options: object,
+  httpOptions: object,
+  amqpOptions: object,
   menuCollapsed: boolean,
   toggleMenuCollapse: () => void,
   getOptionsFromStore: () => void,
@@ -113,6 +114,9 @@ class App extends Component<Props> {
 
   state = {
     theme: createMuiTheme({
+      typography: {
+        useNextVariants: true,
+      },
       palette: {
         type: 'light',
         primary,
@@ -122,11 +126,14 @@ class App extends Component<Props> {
   };
 
   componentWillMount() {
-    const { getOptionsFromStore, options, createConnection } = this.props;
+    const { getOptionsFromStore, lightTheme, createConnection } = this.props;
     getOptionsFromStore();
     const updatedTheme = {
+      typography: {
+        useNextVariants: true,
+      },
       palette: {
-        type: options.lightTheme ? 'light' : 'dark',
+        type: lightTheme ? 'light' : 'dark',
         primary,
         secondary
       }
@@ -138,12 +145,15 @@ class App extends Component<Props> {
   }
 
   componentDidUpdate() {
-    const { options } = this.props;
+    const { lightTheme } = this.props;
     const { theme } = this.state;
 
-    const updatedType = options.lightTheme ? 'light' : 'dark';
+    const updatedType = lightTheme ? 'light' : 'dark';
 
     const updatedTheme = createMuiTheme({
+      typography: {
+        useNextVariants: true,
+      },
       palette: {
         type: updatedType,
         primary,
@@ -166,13 +176,17 @@ class App extends Component<Props> {
       updateOptions,
       toggleMenuCollapse,
       createConnection,
-      lightTheme
+      lightTheme,
+      amqpOptions,
+      httpOptions
     } = this.props;
     const { theme } = this.state;
     return (
       <MuiThemeProvider theme={theme}>
         <div className={classes.root}>
           <AppHeader
+            httpOptions={httpOptions}
+            amqpOptions={amqpOptions}
             updateOptions={updateOptions}
             menuCollapsed={menuCollapsed}
             toggleMenuCollapse={toggleMenuCollapse}
@@ -209,13 +223,17 @@ class App extends Component<Props> {
 }
 
 const mapStateToProps = state => ({
-  options: state.options.options,
+  httpOptions: state.options.options.httpOptions,
+  amqpOptions: state.options.options.amqpOptions,
   menuCollapsed: state.options.menuCollapsed,
   lightTheme: state.options.lightTheme
 });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators(_.assign({}, OptionsActions, AmqpActions, EventActions), dispatch);
+  bindActionCreators(
+    _.assign({}, OptionsActions, AmqpActions, EventActions),
+    dispatch
+  );
 
 export default connect(
   mapStateToProps,

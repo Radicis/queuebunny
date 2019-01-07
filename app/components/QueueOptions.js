@@ -7,8 +7,6 @@ import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select/Select';
 import MenuItem from '@material-ui/core/MenuItem/MenuItem';
 import Input from '@material-ui/core/Input';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
 import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
 
@@ -17,8 +15,10 @@ type Props = {
   exchanges: Array,
   connection: boolean,
   bindExchanges: () => void,
-  createConnection: () => void,
-  clearMessages: () => void
+  clearMessages: () => void,
+  resumeMessages: () => void,
+  isPaused: boolean,
+  pauseMessages: () => void
 };
 
 const styles = () => ({
@@ -70,12 +70,15 @@ class QueueOptions extends Component<Props> {
       exchanges,
       bindExchanges,
       connection,
-      clearMessages
+      clearMessages,
+      isPaused,
+      resumeMessages,
+      pauseMessages
     } = this.props;
     const { selectedExchanges } = this.state;
 
     return (
-      <Grid container spacing={24} direction="row" alignItems="stretch">
+      <Grid container spacing={16} direction="row" alignItems="stretch">
         <Grid item className={classes.select}>
           <Select
             multiple
@@ -93,7 +96,11 @@ class QueueOptions extends Component<Props> {
             )}
           >
             {exchanges.map(e => (
-              <MenuItem value={e.name} style={this.getStyles(e, this)}>
+              <MenuItem
+                key={e.name}
+                value={e.name}
+                style={this.getStyles(e, this)}
+              >
                 {e.name}
               </MenuItem>
             ))}
@@ -109,6 +116,26 @@ class QueueOptions extends Component<Props> {
           >
             Bind
           </Button>
+
+          {isPaused ? (
+            <Button
+              variant="contained"
+              color="inherit"
+              className={classes.button}
+              onClick={resumeMessages}
+            >
+              Resume
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="inherit"
+              className={classes.button}
+              onClick={pauseMessages}
+            >
+              Pause
+            </Button>
+          )}
           <Button
             variant="contained"
             color="inherit"

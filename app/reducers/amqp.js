@@ -1,10 +1,11 @@
 // @flow
-import { SET_CONNECTION, SET_EXCHANGES } from '../actions/amqp';
+import { SET_CONNECTION, SET_EXCHANGES, SET_PAUSED } from '../actions/amqp';
 import type { Action } from './types';
 
 const initialState = {
   connection: false,
-  exchanges: []
+  exchanges: [],
+  isPaused: false
 };
 
 export default function(state = initialState, action: Action) {
@@ -18,6 +19,11 @@ export default function(state = initialState, action: Action) {
       return {
         ...state,
         exchanges: action.exchanges
+      };
+    case SET_PAUSED:
+      return {
+        ...state,
+        isPaused: action.isPaused
       };
     default:
       return state;

@@ -2,7 +2,7 @@
 import Store from 'electron-store';
 import _ from 'lodash';
 
-import type { Dispatch } from '../reducers/types';
+import type { Dispatch, GetState } from '../reducers/types';
 
 export const SET_OPTIONS = 'SET_OPTIONS';
 export const TOGGLE_MENU = 'TOGGLE_MENU';
@@ -34,7 +34,7 @@ export function setOptions(options) {
 
 /**
  * Updates thes options {}
- * @param options
+ * @param updatedOptions
  * @returns {Function}
  */
 export function updateOptions(updatedOptions) {

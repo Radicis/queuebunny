@@ -18,8 +18,6 @@ export function getEventsFromStore() {
   return (dispatch: Dispatch) => {
     let storeEvents = JSONStore.get('events') || [];
     _.isArray(storeEvents) ? null : (storeEvents = []);
-    console.log('Got events from store');
-    console.log(storeEvents);
     dispatch(setEvents(storeEvents));
   };
 }
@@ -85,6 +83,7 @@ export function addEvent(newEventName) {
 
     // Update the item in the state
     dispatch(setEvents(storeEvents));
+    dispatch(selectEvent(newEvent.id));
   };
 }
 
@@ -92,17 +91,19 @@ export function deleteEvent(eventId) {
   return (dispatch: Dispatch) => {
     // Get events from the store
     let storeEvents = JSONStore.get('events') || [];
+
     _.isArray(storeEvents) ? null : (storeEvents = []);
 
     const index = _.findIndex(storeEvents, { id: eventId });
 
-    const updatedStoreEvents = storeEvents.splice(index, 1);
+    storeEvents.splice(index, 1);
 
     // Update the store with the new values
-    JSONStore.set('events', updatedStoreEvents);
+    JSONStore.set('events', storeEvents);
 
     // Update the item in the state
-    dispatch(setEvents(updatedStoreEvents));
+    dispatch(setEvents(storeEvents));
+    dispatch(selectEvent(null));
   };
 }
 

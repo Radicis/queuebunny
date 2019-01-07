@@ -52,7 +52,7 @@ class Events extends Component<Props> {
     getEventsFromStore();
   }
 
-  openOptionsDialog = () => {
+  openAddEventDialog = () => {
     this.setState({
       dialogAddEventOpen: true
     });
@@ -69,12 +69,15 @@ class Events extends Component<Props> {
 
   handleEventChange = e => {
     const { selectEvent } = this.props;
-    selectEvent(e.target.value);
+    if (!e.target.value) {
+      this.openAddEventDialog();
+    } else {
+      selectEvent(e.target.value);
+    }
   };
 
   handleExchangeChange = e => {
     const { updateEvent, selectedEvent, exchanges } = this.props;
-    console.log(e.target.value);
     updateEvent(selectedEvent.id, {
       exchange: _.find(exchanges, ex => ex.name === e.target.value)
     });
@@ -102,21 +105,28 @@ class Events extends Component<Props> {
   };
 
   updateEventContent = content => {
-    console.log(content);
     const { updateEvent, selectedEvent } = this.props;
-    updateEvent(selectedEvent.id, {
-      content
-    });
+    if (selectedEvent) {
+      updateEvent(selectedEvent.id, {
+        content
+      });
+    }
   };
 
   handleDelete = () => {
-    console.log('Delete');
+    const { selectedEvent, deleteEvent } = this.props;
+    deleteEvent(selectedEvent.id);
+  };
+
+  handleAddEvent = name => {
+    const { addEvent } = this.props;
+    this.closeDialogs();
+    addEvent(name);
   };
 
   render() {
     const {
       classes,
-      addEvent,
       selectedEvent,
       events,
       connection,
@@ -139,8 +149,15 @@ class Events extends Component<Props> {
             onChange={this.handleEventChange}
             fullWidth
           >
+            {_.isEmpty(events) ? (
+              <MenuItem value={null}>Click to Add An Event</MenuItem>
+            ) : (
+              ''
+            )}
             {events.map(e => (
-              <MenuItem value={e.id}>{e.name}</MenuItem>
+              <MenuItem key={e.id} value={e.id}>
+                {e.name}
+              </MenuItem>
             ))}
           </Select>
         </Grid>
@@ -155,8 +172,15 @@ class Events extends Component<Props> {
             onChange={this.handleExchangeChange}
             fullWidth
           >
+            {_.isEmpty(exchanges) ? (
+              <MenuItem value="">No Exchanges</MenuItem>
+            ) : (
+              ''
+            )}
             {exchanges.map(e => (
-              <MenuItem value={e.name}>{e.name}</MenuItem>
+              <MenuItem key={e.name} value={e.name}>
+                {e.name}
+              </MenuItem>
             ))}
           </Select>
         </Grid>
@@ -165,7 +189,7 @@ class Events extends Component<Props> {
             disabled={!(selectedEvent && connection)}
             required
             margin="dense"
-            value={selectedEvent.routingKey}
+            value={selectedEvent ? selectedEvent.routingKey : ' '}
             onChange={this.handleRoutingKeyChange}
             fullWidth
           />
@@ -173,13 +197,13 @@ class Events extends Component<Props> {
         <Grid item className={classes.editor} xs={12}>
           <Editor
             lightTheme={lightTheme}
-            content={selectedEvent.content}
+            content={selectedEvent ? selectedEvent.content : ' '}
             updateContent={this.updateEventContent}
           />
         </Grid>
         <Grid item>
           <Button
-            onClick={this.openOptionsDialog}
+            onClick={this.openAddEventDialog}
             className={classes.button}
             variant="contained"
             color="primary"
@@ -191,6 +215,7 @@ class Events extends Component<Props> {
             className={classes.button}
             variant="contained"
             color="secondary"
+            disabled={!(connection && selectedEvent)}
           >
             Delete
           </Button>
@@ -229,7 +254,7 @@ class Events extends Component<Props> {
         </Grid>
         <AddEvent
           open={dialogAddEventOpen}
-          handleOk={addEvent}
+          handleOk={this.handleAddEvent}
           handleClose={this.closeDialogs}
         />
       </Grid>

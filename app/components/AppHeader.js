@@ -50,6 +50,8 @@ type Props = {
   purgeEvents: () => void,
   createConnection: () => void,
   lightTheme: boolean,
+  httpOptions: object,
+  amqpOptions: object,
   classes: object
 };
 
@@ -92,7 +94,9 @@ class AppHeader extends Component<Props> {
       createConnection,
       purgeEvents,
       toggleMenuCollapse,
-      menuCollapsed
+      menuCollapsed,
+      httpOptions,
+      amqpOptions
     } = this.props;
 
     const { dialogOptionsOpen } = this.state;
@@ -114,12 +118,12 @@ class AppHeader extends Component<Props> {
               <MenuIcon />
             </IconButton>
             <Typography
-              variant="title"
+              variant="h6"
               color="inherit"
               className={classes.grow}
               noWrap
             >
-              Queue Bunny
+              Queue Bunny @ {amqpOptions.queue}
             </Typography>
             <IconButton color="inherit" onClick={createConnection}>
               <AutoRenew />
@@ -130,13 +134,19 @@ class AppHeader extends Component<Props> {
           </Toolbar>
         </AppBar>
 
-        <SetOptions
-          lightTheme={lightTheme}
-          open={dialogOptionsOpen}
-          handleOk={this.setOptions}
-          purgeEvents={purgeEvents}
-          handleClose={this.closeDialogs}
-        />
+        {dialogOptionsOpen ? (
+          <SetOptions
+            amqpOptions={amqpOptions}
+            httpOptions={httpOptions}
+            lightTheme={lightTheme}
+            open={dialogOptionsOpen}
+            handleOk={this.setOptions}
+            purgeEvents={purgeEvents}
+            handleClose={this.closeDialogs}
+          />
+        ) : (
+          ''
+        )}
       </div>
     );
   }

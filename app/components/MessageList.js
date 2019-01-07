@@ -19,6 +19,7 @@ const styles = () => ({
   item: {
     padding: 5,
     borderRadius: 5,
+    cursor: 'pointer',
     '&:hover': {
       backgroundColor: 'rgba(238,238,238,0.2)'
     }
@@ -46,7 +47,10 @@ class MessageList extends Component<Props> {
       <div>
         <List className={classes.itemList}>
           {_.map(messages, m => (
-            <ListItem className={classes.item} onClick={() => showMessage(m)}>
+            <ListItem
+              className={classes.item}
+              onClick={() => showMessage(m)}
+            >
               <ListItemText
                 primary={
                   <React.Fragment>

@@ -15,10 +15,6 @@ type Props = {
 
 const Editor = (props: Props) => {
   const { content, updateContent, lightTheme } = props;
-
-  console.log('THEME');
-  console.log(lightTheme);
-
   return (
     <AceEditor
       mode="json"

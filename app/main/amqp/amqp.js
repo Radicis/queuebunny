@@ -26,7 +26,9 @@ class AMQP {
 
     try {
       self._channel.deleteQueue(self.amqpOptions.queue);
-    } catch { }
+    } catch (err) {
+      console.log('No queue to delete');
+    }
 
     self
       .setUp()
@@ -45,7 +47,9 @@ class AMQP {
     self._conn = null;
     self._channel = null;
     return amqp
-      .connect(`${self.amqpOptions.protocol}://${self.amqpOptions.host}`)
+      .connect(
+        `${self.amqpOptions.protocol}://${self.amqpOptions.host}?heartbeat=2`
+      )
       .then(conn => {
         self._conn = conn;
         return self._conn.createChannel();
@@ -56,6 +60,7 @@ class AMQP {
       .then(() =>
         self._channel.assertQueue(self.amqpOptions.queue, {
           durable: false,
+          // exclusive: true,
           autoDelete: true
         })
       )
@@ -88,6 +93,7 @@ class AMQP {
       .then(() =>
         self._channel.assertQueue(self.amqpOptions.queue, {
           durable: false,
+          // exclusive: true,
           autoDelete: true
         })
       )
@@ -106,16 +112,21 @@ class AMQP {
             )
         );
         return Promise.all(exchanges).then(res => {
-          self._channel.consume(self.amqpOptions.queue, msg => {
-            console.log('Consuming');
-            if (msg && msg.content) {
-              self._emmitter.emit('message', msg);
-              console.log('Got a message');
-              self._channel.ack(msg);
-            } else {
-              console.log('Ignored a message with no content');
+          self._channel.consume(
+            self.amqpOptions.queue,
+            msg => {
+              if (msg && msg.content) {
+                self._emmitter.emit('message', msg);
+                console.log('Got a message');
+                self._channel.ack(msg);
+              } else {
+                console.log('Ignored a message with no content');
+              }
+            },
+            {
+              consumerTag: 'QueueBunnyUI'
             }
-          });
+          );
           self._emmitter.emit('connected');
         });
       })
@@ -130,7 +141,39 @@ class AMQP {
     const self = this;
     const { exchangeName, routingKey, content } = msg;
     // content.messageId = UUID();
-    self._channel.publish(exchangeName, routingKey, Buffer.from(content));
+    try {
+      self._channel.publish(exchangeName, routingKey, Buffer.from(content));
+    } catch (err) {
+      console.log('ERROR');
+      console.log(err);
+      self._emmitter.emit('error');
+    }
+  }
+
+  pauseConsume() {
+    const self = this;
+    console.log('Pausing Consume');
+    self._channel.consume(self.amqpOptions.queue, false);
+  }
+
+  resumeConsume() {
+    const self = this;
+    console.log('Resuming Consume');
+    self._channel.consume(
+      self.amqpOptions.queue,
+      msg => {
+        if (msg && msg.content) {
+          self._emmitter.emit('message', msg);
+          console.log('Got a message');
+          self._channel.ack(msg);
+        } else {
+          console.log('Ignored a message with no content');
+        }
+      },
+      {
+        consumerTag: 'QueueBunnyUI'
+      }
+    );
   }
 
   on(event, cb) {

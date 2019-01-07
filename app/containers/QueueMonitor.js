@@ -34,10 +34,13 @@ type Props = {
   addMessage: () => void,
   clearMessages: () => void,
   setExchanges: () => void,
-  reset: () => void,
+  createConnection: () => void,
   bindExchanges: () => void,
   setConnection: () => void,
   clearMessages: () => void,
+  pauseMessages: () => void,
+  resumeMessages: () => void,
+  isPaused: boolean,
   classes: object
 };
 
@@ -51,7 +54,7 @@ class QueueMonitor extends Component<Props> {
   };
 
   componentDidMount() {
-    const { setExchanges, addMessage, reset, setConnection } = this.props;
+    const { setExchanges, addMessage, createConnection, setConnection } = this.props;
     ipcRenderer.on('ready', (e, exchanges) => {
       setExchanges(exchanges);
       setConnection(true);
@@ -62,12 +65,10 @@ class QueueMonitor extends Component<Props> {
       });
     });
     ipcRenderer.on('message', (e, msg) => {
-      console.log('Got Message');
-      console.log(msg);
       addMessage(msg);
     });
     ipcRenderer.on('error', () => {
-      reset();
+      createConnection();
     });
   }
 
@@ -98,7 +99,10 @@ class QueueMonitor extends Component<Props> {
       messages,
       bindExchanges,
       connection,
-      clearMessages
+      clearMessages,
+      isPaused,
+      pauseMessages,
+      resumeMessages
     } = this.props;
     const {
       messageFeedVisible,
@@ -119,6 +123,9 @@ class QueueMonitor extends Component<Props> {
           <Grid item xs={12}>
             <QueueOptions
               exchanges={exchanges}
+              isPaused={isPaused}
+              pauseMessages={pauseMessages}
+              resumeMessages={resumeMessages}
               connection={connection}
               bindExchanges={bindExchanges}
               clearMessages={clearMessages}
@@ -149,7 +156,8 @@ class QueueMonitor extends Component<Props> {
 const mapStateToProps = state => ({
   messages: state.messages.messages,
   exchanges: state.amqp.exchanges,
-  connection: state.amqp.connection
+  connection: state.amqp.connection,
+  isPaused: state.amqp.isPaused
 });
 
 const mapDispatchToProps = dispatch =>

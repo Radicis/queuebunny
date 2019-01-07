@@ -159,3 +159,11 @@ ipcMain.on('publish', (e, msg) => {
     }
   });
 });
+
+ipcMain.on('pause', () => {
+  amqp.pauseConsume();
+});
+
+ipcMain.on('resume', () => {
+  amqp.resumeConsume();
+});
