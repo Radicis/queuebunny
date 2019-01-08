@@ -19,10 +19,9 @@ const initialState = {
       port: '15672',
       username: 'guest',
       password: 'guest'
-    }
-  },
-  menuCollapsed: false,
-  lightTheme: false
+    },
+    lightTheme: false
+  }
 };
 
 export default function(state = initialState, action: Action) {

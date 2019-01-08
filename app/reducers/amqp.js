@@ -1,12 +1,13 @@
 // @flow
-import { SET_CONNECTION, SET_EXCHANGES, SET_PAUSED, SET_LOADING } from '../actions/amqp';
+import { SET_CONNECTION, SET_EXCHANGES, SET_PAUSED, SET_LOADING, SET_HAS_BINDINGS } from '../actions/amqp';
 import type { Action } from './types';
 
 const initialState = {
   connection: false,
   exchanges: [],
   isPaused: false,
-  loading: false
+  loading: false,
+  hasBindings: false
 };
 
 export default function(state = initialState, action: Action) {
@@ -15,6 +16,11 @@ export default function(state = initialState, action: Action) {
       return {
         ...state,
         loading: action.loading
+      };
+    case SET_HAS_BINDINGS:
+      return {
+        ...state,
+        hasBindings: action.hasBindings
       };
     case SET_CONNECTION:
       return {

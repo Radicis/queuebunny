@@ -15,7 +15,7 @@ import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 
 import SetOptions from '../dialogs/SetOptions';
 
-const drawerWidth = 440;
+const drawerWidth = 450;
 
 const styles = theme => ({
   grow: {
@@ -37,10 +37,13 @@ const styles = theme => ({
   },
   menuButton: {
     marginLeft: 12,
-    marginRight: 20
+    marginRight: 10
   },
   hide: {
     display: 'none'
+  },
+  fadedText: {
+    color: '#9c64a6'
   }
 });
 
@@ -85,6 +88,7 @@ class AppHeader extends Component<Props> {
    */
   setOptions = options => {
     const { updateOptions } = this.props;
+    console.log(options);
     updateOptions(options);
     this.closeDialogs();
   };
@@ -113,11 +117,14 @@ class AppHeader extends Component<Props> {
           })}
         >
           <Toolbar disableGutters={menuCollapsed}>
-            <IconButton onClick={toggleMenuCollapse} color="inherit" aria-label="Menu">
+            <IconButton onClick={toggleMenuCollapse} className={classes.menuButton} color="inherit" aria-label="Menu">
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" className={classes.grow} noWrap>
-              Queue Bunny @ {amqpOptions.queue}
+              <React.Fragment>
+                <span>Queue Bunny</span>
+                <span className={classes.fadedText}> @ {amqpOptions.queue}</span>
+              </React.Fragment>
             </Typography>
             <IconButton color="inherit" onClick={createConnection}>
               <AutoRenew />

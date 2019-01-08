@@ -7,11 +7,13 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Input from '@material-ui/core/Input';
-import Button from '@material-ui/core/Button/Button';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 
 const styles = () => ({
   grow: {
-    flexGrow: 1
+    flexGrow: 1,
+    height: '100%'
   },
   itemText: {
     fontSize: '14px'
@@ -30,11 +32,8 @@ const styles = () => ({
     }
   },
   itemList: {
-    height: '100%',
+    height: 'calc(100% - 85px)',
     overflow: 'auto'
-  },
-  input: {
-    marginRight: 10
   }
 });
 
@@ -138,46 +137,57 @@ class MessageList extends Component<Props> {
     const { classes, showMessage, messages } = this.props;
     const { filteredMessages, routingKey, content } = this.state;
     return (
-      <div className={classes.grow}>
-        <Input
-          className={classes.input}
-          placeholder="Routing Key"
-          value={routingKey}
-          onChange={this.filterMessagesByField('routingKey')}
-        />
-        <Input
-          className={classes.input}
-          placeholder="Content"
-          value={content}
-          onChange={this.filterMessagesByContent}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          disabled={!this.isFiltered()}
-          className={classes.input}
-          onClick={this.reset}
-        >
-          Reset
-        </Button>
-        <Button variant="contained" color="inherit" disabled={_.isEmpty(messages)} onClick={this.clearMessages}>
-          Clear
-        </Button>
-        <List className={classes.itemList}>
-          {_.map(filteredMessages, m => (
-            <ListItem className={classes.item} onClick={() => showMessage(m)}>
-              <ListItemText
-                primary={
-                  <React.Fragment>
-                    <span className={classes.itemTextFaded}>{m.fields.exchange}</span>
-                    <span className={classes.itemText}>{m.fields.routingKey}</span>
-                  </React.Fragment>
-                }
+      <Grid container spacing={24} className={classes.grow} justify="stretch" alignItems="center">
+        <Grid container item xs={12} spacing={16}>
+          <Grid item container spacing={16} xs={8}>
+            <Grid item xs={6}>
+              <Input
+                fullWidth
+                placeholder="Routing Key"
+                value={routingKey}
+                onChange={this.filterMessagesByField('routingKey')}
               />
-            </ListItem>
-          ))}
-        </List>
-      </div>
+            </Grid>
+            <Grid item xs={6}>
+              <Input fullWidth placeholder="Content" value={content} onChange={this.filterMessagesByContent} />
+            </Grid>
+          </Grid>
+          <Grid item container xs={4} spacing={16}>
+            <Grid item xs={6}>
+              <Button variant="contained" color="primary" disabled={!this.isFiltered()} onClick={this.reset} fullWidth>
+                Reset
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="inherit"
+                disabled={_.isEmpty(messages)}
+                onClick={this.clearMessages}
+              >
+                Clear
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} className={classes.grow}>
+          <List className={classes.itemList}>
+            {_.map(filteredMessages, m => (
+              <ListItem className={classes.item} onClick={() => showMessage(m)}>
+                <ListItemText
+                  primary={
+                    <React.Fragment>
+                      <span className={classes.itemTextFaded}>{m.fields.exchange}</span>
+                      <span className={classes.itemText}>{m.fields.routingKey}</span>
+                    </React.Fragment>
+                  }
+                />
+              </ListItem>
+            ))}
+          </List>
+        </Grid>
+      </Grid>
     );
   }
 }

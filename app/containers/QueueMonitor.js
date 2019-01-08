@@ -17,14 +17,8 @@ import ShowMessage from '../dialogs/ShowMessage';
 import ShowError from '../dialogs/ShowError';
 
 const styles = () => ({
-  container: {
-    height: 'calc(100% - 70px)',
-    width: '100%',
-    overflow: 'hidden'
-  },
   fullHeight: {
-    height: '100%',
-    overflow: 'auto'
+    height: '100%'
   }
 });
 
@@ -39,9 +33,7 @@ type Props = {
   bindExchanges: () => void,
   setConnection: () => void,
   clearMessages: () => void,
-  pauseMessages: () => void,
-  resumeMessages: () => void,
-  isPaused: boolean,
+  hasBindings: boolean,
   classes: object
 };
 
@@ -106,32 +98,20 @@ class QueueMonitor extends Component<Props> {
   };
 
   render() {
-    const {
-      classes,
-      exchanges,
-      messages,
-      bindExchanges,
-      connection,
-      clearMessages,
-      isPaused,
-      pauseMessages,
-      resumeMessages
-    } = this.props;
+    const { classes, exchanges, messages, bindExchanges, connection, clearMessages, hasBindings } = this.props;
     const { messageFeedVisible, showMessageOpen, shownMessage, message, showErrorOpen, currentError } = this.state;
     return (
-      <div className={classes.container}>
-        <Grid container direction="row" spacing={16} className={classes.container}>
+      <div className={classes.fullHeight}>
+        <Grid container direction="row" spacing={16} className={classes.fullHeight}>
           <Grid item xs={12}>
             <QueueOptions
               exchanges={exchanges}
-              isPaused={isPaused}
-              pauseMessages={pauseMessages}
-              resumeMessages={resumeMessages}
+              hasBindings={hasBindings}
               connection={connection}
               bindExchanges={bindExchanges}
             />
           </Grid>
-          <Grid item className={classes.fullHeight} xs={12}>
+          <Grid item xs={12} className={classes.fullHeight}>
             <MessageList
               messages={messages}
               clearMessages={clearMessages}
@@ -155,7 +135,8 @@ const mapStateToProps = state => ({
   messages: state.messages.messages,
   exchanges: state.amqp.exchanges,
   connection: state.amqp.connection,
-  isPaused: state.amqp.isPaused
+  isPaused: state.amqp.isPaused,
+  hasBindings: state.amqp.hasBindings
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(_.assign({}, AmqpActions, MessageActions), dispatch);

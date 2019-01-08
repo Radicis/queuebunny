@@ -7,7 +7,6 @@ import _ from 'lodash';
 
 import Drawer from '@material-ui/core/Drawer';
 import Paper from '@material-ui/core/Paper';
-import LinearProgress from '@material-ui/core/LinearProgress';
 
 import classNames from 'classnames';
 
@@ -16,16 +15,16 @@ import * as AmqpActions from '../actions/amqp';
 import * as EventActions from '../actions/events';
 
 import AppHeader from '../components/AppHeader';
-import Event from './Event';
+import Sidebar from './Sidebar';
 
-const drawerWidth = 440;
+const drawerWidth = 450;
 
 const styles = theme => ({
   fullHeight: {
     height: '100%'
   },
   mainContainer: {
-    height: 'calc(100% - 16px)',
+    height: 'calc(100% - 96px)',
     padding: theme.spacing.unit * 2,
     overflow: 'hidden',
     borderRadius: 0
@@ -204,7 +203,7 @@ class App extends Component<Props> {
               paper: classes.drawerPaper
             }}
           >
-            <Event />
+            <Sidebar />
           </Drawer>
           <main
             className={classNames(classes.content, {
@@ -226,7 +225,7 @@ const mapStateToProps = state => ({
   httpOptions: state.options.options.httpOptions,
   amqpOptions: state.options.options.amqpOptions,
   menuCollapsed: state.options.menuCollapsed,
-  lightTheme: state.options.lightTheme,
+  lightTheme: state.options.options.lightTheme,
   loading: state.amqp.loading
 });
 

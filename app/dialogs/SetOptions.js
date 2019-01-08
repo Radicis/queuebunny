@@ -20,15 +20,6 @@ const styles = theme => ({
   },
   tabs: {
     backgroundColor: theme.palette.background.paper
-  },
-  leftIcon: {
-    marginRight: theme.spacing.unit
-  },
-  rightIcon: {
-    marginLeft: theme.spacing.unit
-  },
-  iconSmall: {
-    fontSize: 20
   }
 });
 
@@ -83,11 +74,6 @@ class SetOptions extends Component<Props> {
     });
   }
 
-  /**
-   * Updates the state when the text input changes
-   * @param name
-   * @returns {Function}
-   */
   handleChange = name => event => {
     this.setState({
       [name]: event.target.checked

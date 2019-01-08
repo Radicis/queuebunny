@@ -15,6 +15,7 @@ type Props = {
   classes: object,
   exchanges: Array,
   connection: boolean,
+  hasBindings: boolean,
   bindExchanges: () => void
 };
 
@@ -52,14 +53,15 @@ class QueueOptions extends Component<Props> {
   };
 
   render() {
-    const { classes, exchanges, bindExchanges, connection } = this.props;
+    const { classes, exchanges, bindExchanges, connection, hasBindings } = this.props;
     const { selectedExchanges } = this.state;
 
     return (
-      <Grid container spacing={16} direction="row" alignItems="stretch">
-        <Grid item className={classes.select}>
+      <Grid container spacing={16} direction="row" justify="space-around" alignItems="center">
+        <Grid item className={classes.select} xs={8}>
           <Select
             multiple
+            placeholder="Exchanges"
             disabled={!connection}
             fullWidth
             value={_.map(selectedExchanges, ex => ex.name)}
@@ -75,16 +77,29 @@ class QueueOptions extends Component<Props> {
             ))}
           </Select>
         </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={() => bindExchanges(selectedExchanges)}
-            disabled={!connection}
-          >
-            Bind
-          </Button>
+        <Grid item xs={4}>
+          {hasBindings ? (
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={() => bindExchanges([])}
+            >
+              Stop
+            </Button>
+          ) : (
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={() => bindExchanges(selectedExchanges)}
+              disabled={!connection}
+            >
+              Bind
+            </Button>
+          )}
         </Grid>
       </Grid>
     );

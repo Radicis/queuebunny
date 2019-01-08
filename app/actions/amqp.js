@@ -6,6 +6,7 @@ export const SET_CONNECTION = 'SET_CONNECTION';
 export const SET_EXCHANGES = 'SET_EXCHANGES';
 export const SET_PAUSED = 'SET_PAUSED';
 export const SET_LOADING = 'SET_LOADING';
+export const SET_HAS_BINDINGS = 'SET_HAS_BINDINGS';
 
 export function createConnection() {
   return (dispatch: Dispatch, getState: GetState) => {
@@ -28,7 +29,8 @@ export function reset() {
 }
 
 export function bindExchanges(exchanges) {
-  return () => {
+  return (dispatch: Dispatch) => {
+    dispatch(setHasBindings(exchanges.length !== 0));
     ipcRenderer.send('bindExchanges', exchanges);
   };
 }
@@ -43,17 +45,10 @@ export function publish(exchange, routingKey, content) {
   };
 }
 
-export function pauseMessages() {
-  return (dispatch: Dispatch) => {
-    ipcRenderer.send('pause');
-    dispatch(setPaused(true));
-  };
-}
-
-export function resumeMessages() {
-  return (dispatch: Dispatch) => {
-    ipcRenderer.send('resume');
-    dispatch(setPaused(false));
+export function setHasBindings(hasBindings) {
+  return {
+    type: SET_HAS_BINDINGS,
+    hasBindings
   };
 }
 
