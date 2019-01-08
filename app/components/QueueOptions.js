@@ -7,18 +7,15 @@ import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select/Select';
 import MenuItem from '@material-ui/core/MenuItem/MenuItem';
 import Input from '@material-ui/core/Input';
-import Chip from '@material-ui/core/Chip';
+import Checkbox from '@material-ui/core/Checkbox';
+import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 
 type Props = {
   classes: object,
   exchanges: Array,
   connection: boolean,
-  bindExchanges: () => void,
-  clearMessages: () => void,
-  resumeMessages: () => void,
-  isPaused: boolean,
-  pauseMessages: () => void
+  bindExchanges: () => void
 };
 
 const styles = () => ({
@@ -50,31 +47,12 @@ class QueueOptions extends Component<Props> {
   handleSelectedExchangesChange = e => {
     const { exchanges } = this.props;
     this.setState({
-      selectedExchanges: _.filter(
-        exchanges,
-        ex => e.target.value.indexOf(ex.name) > -1
-      )
+      selectedExchanges: _.filter(exchanges, ex => e.target.value.indexOf(ex.name) > -1)
     });
   };
 
-  getStyles = exchange => {
-    const { selectedExchanges } = this.state;
-    return {
-      fontWeight: selectedExchanges.indexOf(exchange) === -1 ? 300 : 500
-    };
-  };
-
   render() {
-    const {
-      classes,
-      exchanges,
-      bindExchanges,
-      connection,
-      clearMessages,
-      isPaused,
-      resumeMessages,
-      pauseMessages
-    } = this.props;
+    const { classes, exchanges, bindExchanges, connection } = this.props;
     const { selectedExchanges } = this.state;
 
     return (
@@ -86,22 +64,13 @@ class QueueOptions extends Component<Props> {
             fullWidth
             value={_.map(selectedExchanges, ex => ex.name)}
             onChange={this.handleSelectedExchangesChange}
-            input={<Input id="select-multiple-chip" />}
-            renderValue={selected => (
-              <div>
-                {selected.map(value => (
-                  <Chip key={value} label={value} />
-                ))}
-              </div>
-            )}
+            input={<Input id="select-multiple" />}
+            renderValue={selected => selected.join(', ')}
           >
             {exchanges.map(e => (
-              <MenuItem
-                key={e.name}
-                value={e.name}
-                style={this.getStyles(e, this)}
-              >
-                {e.name}
+              <MenuItem key={e.name} value={e.name}>
+                <Checkbox color="primary" checked={_.map(selectedExchanges, sx => sx.name).indexOf(e.name) > -1} />
+                <ListItemText primary={e.name} />
               </MenuItem>
             ))}
           </Select>
@@ -115,34 +84,6 @@ class QueueOptions extends Component<Props> {
             disabled={!connection}
           >
             Bind
-          </Button>
-
-          {isPaused ? (
-            <Button
-              variant="contained"
-              color="inherit"
-              className={classes.button}
-              onClick={resumeMessages}
-            >
-              Resume
-            </Button>
-          ) : (
-            <Button
-              variant="contained"
-              color="inherit"
-              className={classes.button}
-              onClick={pauseMessages}
-            >
-              Pause
-            </Button>
-          )}
-          <Button
-            variant="contained"
-            color="inherit"
-            className={classes.button}
-            onClick={clearMessages}
-          >
-            Clear
           </Button>
         </Grid>
       </Grid>

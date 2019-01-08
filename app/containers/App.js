@@ -1,11 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  createMuiTheme,
-  MuiThemeProvider,
-  withStyles
-} from '@material-ui/core/styles';
+import { createMuiTheme, MuiThemeProvider, withStyles } from '@material-ui/core/styles';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 
@@ -117,7 +113,7 @@ class App extends Component<Props> {
   state = {
     theme: createMuiTheme({
       typography: {
-        useNextVariants: true,
+        useNextVariants: true
       },
       palette: {
         type: 'light',
@@ -132,7 +128,7 @@ class App extends Component<Props> {
     getOptionsFromStore();
     const updatedTheme = {
       typography: {
-        useNextVariants: true,
+        useNextVariants: true
       },
       palette: {
         type: lightTheme ? 'light' : 'dark',
@@ -154,7 +150,7 @@ class App extends Component<Props> {
 
     const updatedTheme = createMuiTheme({
       typography: {
-        useNextVariants: true,
+        useNextVariants: true
       },
       palette: {
         type: updatedType,
@@ -235,10 +231,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    _.assign({}, OptionsActions, AmqpActions, EventActions),
-    dispatch
-  );
+  bindActionCreators(_.assign({}, OptionsActions, AmqpActions, EventActions), dispatch);
 
 export default connect(
   mapStateToProps,

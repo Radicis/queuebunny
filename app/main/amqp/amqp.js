@@ -51,9 +51,9 @@ class AMQP {
     self._channel = null;
     return amqp
       .connect(
-        `${self.amqpOptions.protocol}://${self.amqpOptions.username}:${
-          self.amqpOptions.password
-        }@${self.amqpOptions.host}`
+        `${self.amqpOptions.protocol}://${self.amqpOptions.username}:${self.amqpOptions.password}@${
+          self.amqpOptions.host
+        }`
       )
       .then(conn => {
         self._conn = conn;
@@ -79,9 +79,9 @@ class AMQP {
 
   async getExchanges() {
     const self = this;
-    const exchangeUrl = `${self.httpOptions.protocol}://${
-      self.httpOptions.host
-    }:${self.httpOptions.port}/api/exchanges`;
+    const exchangeUrl = `${self.httpOptions.protocol}://${self.httpOptions.host}:${
+      self.httpOptions.port
+    }/api/exchanges`;
     console.log(`Getting exchanges: ${exchangeUrl}`);
     return axios.get(exchangeUrl, {
       auth: {
@@ -108,20 +108,16 @@ class AMQP {
             .assertExchange(exchange.name, exchange.type, {
               durable: exchange.durable
             })
-            .then(() =>
-              self._channel.bindQueue(
-                self.amqpOptions.queue,
-                exchange.name,
-                '#'
-              )
-            )
+            .then(() => self._channel.bindQueue(self.amqpOptions.queue, exchange.name, '#'))
         );
         return Promise.all(exchanges).then(res => {
           self._channel.consume(
             self.amqpOptions.queue,
             msg => {
               if (msg && msg.content) {
-                self._emmitter.emit('message', msg);
+                const formattedMsg = msg;
+                formattedMsg.content = formattedMsg.content.toString();
+                self._emmitter.emit('message', formattedMsg);
                 console.log('Got a message');
                 self._channel.ack(msg);
               } else {
@@ -153,32 +149,6 @@ class AMQP {
       console.log(err);
       self._emmitter.emit('error', err);
     }
-  }
-
-  pauseConsume() {
-    const self = this;
-    console.log('Pausing Consume');
-    self._channel.consume(self.amqpOptions.queue, false);
-  }
-
-  resumeConsume() {
-    const self = this;
-    console.log('Resuming Consume');
-    self._channel.consume(
-      self.amqpOptions.queue,
-      msg => {
-        if (msg && msg.content) {
-          self._emmitter.emit('message', msg);
-          console.log('Got a message');
-          self._channel.ack(msg);
-        } else {
-          console.log('Ignored a message with no content');
-        }
-      },
-      {
-        consumerTag: 'QueueBunnyUI'
-      }
-    );
   }
 
   on(event, cb) {

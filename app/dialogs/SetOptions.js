@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -135,18 +134,9 @@ class SetOptions extends Component<Props> {
 
   render() {
     const { open, handleClose, purgeEvents } = this.props;
-    const {
-      lightTheme,
-      value,
-      localAmqpOptions,
-      localHttpOptions
-    } = this.state;
+    const { lightTheme, value, localAmqpOptions, localHttpOptions } = this.state;
     return (
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
+      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogContent>
           <Tabs
             value={value}
@@ -270,13 +260,7 @@ class SetOptions extends Component<Props> {
             <TabContainer>
               <FormGroup row>
                 <FormControlLabel
-                  control={
-                    <Switch
-                      checked={lightTheme}
-                      onChange={this.handleChange('lightTheme')}
-                      value="light"
-                    />
-                  }
+                  control={<Switch checked={lightTheme} onChange={this.handleChange('lightTheme')} value="light" />}
                   label="Vlad Mode"
                 />
               </FormGroup>

@@ -113,19 +113,10 @@ class AppHeader extends Component<Props> {
           })}
         >
           <Toolbar disableGutters={menuCollapsed}>
-            <IconButton
-              onClick={toggleMenuCollapse}
-              color="inherit"
-              aria-label="Menu"
-            >
+            <IconButton onClick={toggleMenuCollapse} color="inherit" aria-label="Menu">
               <MenuIcon />
             </IconButton>
-            <Typography
-              variant="h6"
-              color="inherit"
-              className={classes.grow}
-              noWrap
-            >
+            <Typography variant="h6" color="inherit" className={classes.grow} noWrap>
               Queue Bunny @ {amqpOptions.queue}
             </Typography>
             <IconButton color="inherit" onClick={createConnection}>

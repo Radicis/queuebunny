@@ -20,8 +20,7 @@ const mapStateToProps = state => ({
   lightTheme: state.options.lightTheme
 });
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(_.assign({}, EventActions, AmqpActions), dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(_.assign({}, EventActions, AmqpActions), dispatch);
 
 export default connect(
   mapStateToProps,

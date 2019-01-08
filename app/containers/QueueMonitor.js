@@ -57,12 +57,7 @@ class QueueMonitor extends Component<Props> {
   };
 
   componentDidMount() {
-    const {
-      setExchanges,
-      addMessage,
-      createConnection,
-      setConnection
-    } = this.props;
+    const { setExchanges, addMessage, createConnection, setConnection } = this.props;
     ipcRenderer.on('ready', (e, exchanges) => {
       setExchanges(exchanges);
       setConnection(true);
@@ -122,24 +117,10 @@ class QueueMonitor extends Component<Props> {
       pauseMessages,
       resumeMessages
     } = this.props;
-    const {
-      messageFeedVisible,
-      showMessageOpen,
-      shownMessage,
-      message,
-      showErrorOpen,
-      currentError
-    } = this.state;
+    const { messageFeedVisible, showMessageOpen, shownMessage, message, showErrorOpen, currentError } = this.state;
     return (
       <div className={classes.container}>
-        <Grid
-          container
-          direction="row"
-          justify="space-around"
-          alignItems="center"
-          spacing={16}
-          className={classes.container}
-        >
+        <Grid container direction="row" spacing={16} className={classes.container}>
           <Grid item xs={12}>
             <QueueOptions
               exchanges={exchanges}
@@ -148,31 +129,23 @@ class QueueMonitor extends Component<Props> {
               resumeMessages={resumeMessages}
               connection={connection}
               bindExchanges={bindExchanges}
-              clearMessages={clearMessages}
             />
           </Grid>
           <Grid item className={classes.fullHeight} xs={12}>
             <MessageList
               messages={messages}
+              clearMessages={clearMessages}
               showMessage={this.openShowMessage}
               messageFeedVisible={messageFeedVisible}
             />
           </Grid>
         </Grid>
         {showMessageOpen ? (
-          <ShowMessage
-            showMessage={shownMessage}
-            message={message}
-            handleOk={this.closeDialogs}
-          />
+          <ShowMessage showMessage={shownMessage} message={message} handleOk={this.closeDialogs} />
         ) : (
           ''
         )}
-        {showErrorOpen ? (
-          <ShowError error={currentError} handleOk={this.closeDialogs} />
-        ) : (
-          ''
-        )}
+        {showErrorOpen ? <ShowError error={currentError} handleOk={this.closeDialogs} /> : ''}
       </div>
     );
   }
@@ -185,8 +158,7 @@ const mapStateToProps = state => ({
   isPaused: state.amqp.isPaused
 });
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(_.assign({}, AmqpActions, MessageActions), dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(_.assign({}, AmqpActions, MessageActions), dispatch);
 
 export default connect(
   mapStateToProps,

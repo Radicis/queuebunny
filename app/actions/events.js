@@ -51,9 +51,7 @@ export function updateEvent(updatedEventId, updatedEvent) {
     console.log('Updating event..');
 
     // Update the item in the store
-    storeEvents = _.map(storeEvents, i =>
-      i.id === updatedEventId ? _.assign({}, i, updatedEvent) : i
-    );
+    storeEvents = _.map(storeEvents, i => (i.id === updatedEventId ? _.assign({}, i, updatedEvent) : i));
 
     // Update the store with the new values
     JSONStore.set('events', storeEvents);

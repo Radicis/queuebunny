@@ -43,11 +43,7 @@ class AddEvent extends Component<Props> {
     const { open, handleClose } = this.props;
     const { newItemName } = this.state;
     return (
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
+      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Create New Item</DialogTitle>
         <DialogContent>
           <TextField
@@ -64,12 +60,7 @@ class AddEvent extends Component<Props> {
           <Button onClick={handleClose} color="secondary">
             Cancel
           </Button>
-          <Button
-            disabled={!newItemName}
-            onClick={this.handleOk}
-            color="primary"
-            variant="contained"
-          >
+          <Button disabled={!newItemName} onClick={this.handleOk} color="primary" variant="contained">
             Ok
           </Button>
         </DialogActions>

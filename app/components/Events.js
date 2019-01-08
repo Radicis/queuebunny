@@ -7,7 +7,7 @@ import Select from '@material-ui/core/Select';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
+import Input from '@material-ui/core/Input';
 
 import AddEvent from '../dialogs/AddEvent';
 import Editor from './Editor';
@@ -125,35 +125,15 @@ class Events extends Component<Props> {
   };
 
   render() {
-    const {
-      classes,
-      selectedEvent,
-      events,
-      connection,
-      exchanges,
-      lightTheme
-    } = this.props;
+    const { classes, selectedEvent, events, connection, exchanges, lightTheme } = this.props;
 
     const { dialogAddEventOpen } = this.state;
 
     return (
-      <Grid
-        container
-        spacing={24}
-        direction="row"
-        className={classes.fullHeight}
-      >
+      <Grid container spacing={24} direction="row" className={classes.fullHeight}>
         <Grid item xs={12}>
-          <Select
-            value={selectedEvent ? selectedEvent.id : ' '}
-            onChange={this.handleEventChange}
-            fullWidth
-          >
-            {_.isEmpty(events) ? (
-              <MenuItem value={null}>Click to Add An Event</MenuItem>
-            ) : (
-              ''
-            )}
+          <Select value={selectedEvent ? selectedEvent.id : ' '} onChange={this.handleEventChange} fullWidth>
+            {_.isEmpty(events) ? <MenuItem value={null}>Click to Add An Event</MenuItem> : ''}
             {events.map(e => (
               <MenuItem key={e.id} value={e.id}>
                 {e.name}
@@ -164,19 +144,11 @@ class Events extends Component<Props> {
         <Grid item xs={12}>
           {selectedEvent ? (
             <Select
-              value={
-                selectedEvent && selectedEvent.exchange
-                  ? selectedEvent.exchange.name
-                  : ' '
-              }
+              value={selectedEvent && selectedEvent.exchange ? selectedEvent.exchange.name : ' '}
               onChange={this.handleExchangeChange}
               fullWidth
             >
-              {_.isEmpty(exchanges) ? (
-                <MenuItem value="">No Exchanges</MenuItem>
-              ) : (
-                ''
-              )}
+              {_.isEmpty(exchanges) ? <MenuItem value="">No Exchanges</MenuItem> : ''}
               {exchanges.map(e => (
                 <MenuItem key={e.name} value={e.name}>
                   {e.name}
@@ -189,7 +161,8 @@ class Events extends Component<Props> {
         </Grid>
         <Grid item xs={12}>
           {selectedEvent ? (
-            <TextField
+            <Input
+              placeholder="Routing Key"
               required
               margin="dense"
               value={selectedEvent ? selectedEvent.routingKey : ' '}
@@ -212,12 +185,7 @@ class Events extends Component<Props> {
           )}
         </Grid>
         <Grid item>
-          <Button
-            onClick={this.openAddEventDialog}
-            className={classes.button}
-            variant="contained"
-            color="primary"
-          >
+          <Button onClick={this.openAddEventDialog} className={classes.button} variant="contained" color="primary">
             Add New
           </Button>
           <Button
@@ -234,14 +202,7 @@ class Events extends Component<Props> {
             className={classes.button}
             color="primary"
             onClick={this.handlePublish}
-            disabled={
-              !(
-                connection &&
-                selectedEvent &&
-                selectedEvent.exchange &&
-                selectedEvent.routingKey
-              )
-            }
+            disabled={!(connection && selectedEvent && selectedEvent.exchange && selectedEvent.routingKey)}
           >
             Send it
           </Button>
@@ -250,23 +211,12 @@ class Events extends Component<Props> {
             className={classes.button}
             color="primary"
             onClick={this.handlePublish100}
-            disabled={
-              !(
-                connection &&
-                selectedEvent &&
-                selectedEvent.exchange &&
-                selectedEvent.routingKey
-              )
-            }
+            disabled={!(connection && selectedEvent && selectedEvent.exchange && selectedEvent.routingKey)}
           >
             Send 100
           </Button>
         </Grid>
-        <AddEvent
-          open={dialogAddEventOpen}
-          handleOk={this.handleAddEvent}
-          handleClose={this.closeDialogs}
-        />
+        <AddEvent open={dialogAddEventOpen} handleOk={this.handleAddEvent} handleClose={this.closeDialogs} />
       </Grid>
     );
   }

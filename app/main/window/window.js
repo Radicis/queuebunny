@@ -1,12 +1,11 @@
-import {app, BrowserWindow, Menu} from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 
-const appUrl = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
-  : `file://${app.getAppPath()}/index.html`;
+const appUrl =
+  process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${app.getAppPath()}/index.html`;
 
 let mainWindow = null;
 
-export function createWindow () {
+export function createWindow() {
   /**
    * Initial window options
    */
@@ -29,7 +28,7 @@ export function createWindow () {
         },
         {
           label: 'Exit',
-          click () {
+          click() {
             app.quit();
           }
         }
@@ -45,7 +44,8 @@ export function createWindow () {
         { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
         { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
         { label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:' }
-      ]}
+      ]
+    }
   ]);
 
   Menu.setApplicationMenu(menu);

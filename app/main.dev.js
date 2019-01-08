@@ -32,10 +32,7 @@ if (process.env.NODE_ENV === 'production') {
   sourceMapSupport.install();
 }
 
-if (
-  process.env.NODE_ENV === 'development' ||
-  process.env.DEBUG_PROD === 'true'
-) {
+if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
   require('electron-debug')();
 }
 
@@ -44,9 +41,7 @@ const installExtensions = async () => {
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
 
-  return Promise.all(
-    extensions.map(name => installer.default(installer[name], forceDownload))
-  ).catch(console.log);
+  return Promise.all(extensions.map(name => installer.default(installer[name], forceDownload))).catch(console.log);
 };
 
 /**
@@ -62,10 +57,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', async () => {
-  if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.DEBUG_PROD === 'true'
-  ) {
+  if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
     await installExtensions();
   }
 
@@ -125,9 +117,7 @@ ipcMain.on('createConnection', (e, options) => {
     // Strip out system exchanges
     const validExchanges = _.filter(
       exchanges,
-      ex =>
-        blackList.indexOf(ex.name) === -1 &&
-        !ex.name.includes('inspection.mobile')
+      ex => blackList.indexOf(ex.name) === -1 && !ex.name.includes('inspection.mobile')
     );
     mainWindow.send('ready', validExchanges);
   });
@@ -163,12 +153,4 @@ ipcMain.on('publish', (e, msg) => {
       mainWindow.send('error', publishErr);
     }
   });
-});
-
-ipcMain.on('pause', () => {
-  amqp.pauseConsume();
-});
-
-ipcMain.on('resume', () => {
-  amqp.resumeConsume();
 });
