@@ -12,6 +12,7 @@ export function createConnection() {
   return (dispatch: Dispatch, getState: GetState) => {
     const { options } = getState().options;
     dispatch(setLoading(true));
+    dispatch(setConnection(false));
     ipcRenderer.send('createConnection', options);
     ipcRenderer.on('ready', () => {
       dispatch(setLoading(false));

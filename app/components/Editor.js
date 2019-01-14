@@ -7,6 +7,8 @@ import 'brace/mode/json';
 import 'brace/theme/monokai';
 import 'brace/theme/github';
 
+import ParseContent from '../utils/ParseContent';
+
 type Props = {
   content: string,
   lightTheme: boolean,
@@ -20,6 +22,9 @@ class Editor extends Component<Props> {
     content: ''
   };
 
+  /**
+   * On mount, set the local state content
+   */
   componentWillMount() {
     const { content } = this.props;
     this.setState({
@@ -27,24 +32,21 @@ class Editor extends Component<Props> {
     });
   }
 
+  /**
+   * Debounce content edit event
+   * @param value
+   */
   updateContent = value => {
     const self = this;
     const { updateContent } = this.props;
     clearTimeout(self.timer);
+    const parsedContent = ParseContent(value);
     this.setState({
-      content: this.parseContent(value)
+      content: parsedContent
     });
     self.timer = setTimeout(() => {
-      updateContent(self.parseContent(value));
+      updateContent(parsedContent);
     }, 500);
-  };
-
-  parseContent = content => {
-    try {
-      return JSON.stringify(JSON.parse(content), null, 2);
-    } catch {
-      return content;
-    }
   };
 
   render() {

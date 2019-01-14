@@ -29,7 +29,6 @@ type Props = {
   addMessage: () => void,
   clearMessages: () => void,
   setExchanges: () => void,
-  createConnection: () => void,
   bindExchanges: () => void,
   setConnection: () => void,
   clearMessages: () => void,
@@ -48,27 +47,29 @@ class QueueMonitor extends Component<Props> {
     message: {}
   };
 
+  /**
+   * On mount, set up the event listeners for the ipcRenderer bridge
+   */
   componentDidMount() {
-    const { setExchanges, addMessage, createConnection, setConnection } = this.props;
+    const { setExchanges, addMessage, setConnection } = this.props;
     ipcRenderer.on('ready', (e, exchanges) => {
       setExchanges(exchanges);
       setConnection(true);
-    });
-    ipcRenderer.on('bindComplete', () => {
-      this.setState({
-        messageFeedVisible: true
-      });
     });
     ipcRenderer.on('message', (e, msg) => {
       addMessage(msg);
     });
     ipcRenderer.on('error', (e, err) => {
-      // createConnection();
-      console.log(err);
-      // this.displayError(err || null);
+      if (!_.isEqual(err, {})) {
+        this.displayError(err);
+        setConnection(false); // it is likely that the error broke the amqp connection
+      }
     });
   }
 
+  /**
+   * On unmount, clear the event listeners to prevent duplicate events
+   */
   componentWillUnmount() {
     ipcRenderer.on('ready', false);
     ipcRenderer.on('bindComplete', false);
@@ -76,13 +77,21 @@ class QueueMonitor extends Component<Props> {
     ipcRenderer.on('error', false);
   }
 
-  displayError(currentError) {
+  /**
+   * Show the error dialog with the generated error
+   * @param currentError
+   */
+  displayError = currentError => {
     this.setState({
       showErrorOpen: true,
       currentError
     });
-  }
+  };
 
+  /**
+   * Display the message details
+   * @param message
+   */
   openShowMessage = message => {
     this.setState({
       showMessageOpen: true,
@@ -90,6 +99,9 @@ class QueueMonitor extends Component<Props> {
     });
   };
 
+  /**
+   * Close all dialogs
+   */
   closeDialogs = () => {
     this.setState({
       showMessageOpen: false,
@@ -99,7 +111,7 @@ class QueueMonitor extends Component<Props> {
 
   render() {
     const { classes, exchanges, messages, bindExchanges, connection, clearMessages, hasBindings } = this.props;
-    const { messageFeedVisible, showMessageOpen, shownMessage, message, showErrorOpen, currentError } = this.state;
+    const { showMessageOpen, shownMessage, message, showErrorOpen, currentError } = this.state;
     return (
       <div className={classes.fullHeight}>
         <Grid container direction="row" spacing={16} className={classes.fullHeight}>
@@ -112,12 +124,7 @@ class QueueMonitor extends Component<Props> {
             />
           </Grid>
           <Grid item xs={12} className={classes.fullHeight}>
-            <MessageList
-              messages={messages}
-              clearMessages={clearMessages}
-              showMessage={this.openShowMessage}
-              messageFeedVisible={messageFeedVisible}
-            />
+            <MessageList messages={messages} clearMessages={clearMessages} showMessage={this.openShowMessage} />
           </Grid>
         </Grid>
         {showMessageOpen ? (

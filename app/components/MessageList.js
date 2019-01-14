@@ -53,6 +53,9 @@ class MessageList extends Component<Props> {
     content: ''
   };
 
+  /**
+   * On mount set the filtered messages array
+   */
   componentWillMount() {
     const { messages } = this.props;
     this.setState({
@@ -60,6 +63,11 @@ class MessageList extends Component<Props> {
     });
   }
 
+  /**
+   * On update check for equality to prevent max depth and set the filtered messages
+   * TODO: Find a better way to do this
+   * @param prevProps
+   */
   componentDidUpdate(prevProps) {
     const { messages } = this.props;
     if (!_.isEqual(messages, prevProps.messages)) {
@@ -69,6 +77,9 @@ class MessageList extends Component<Props> {
     }
   }
 
+  /**
+   * Resets the filters
+   */
   reset = () => {
     const { messages } = this.props;
     this.setState({
@@ -78,6 +89,11 @@ class MessageList extends Component<Props> {
     });
   };
 
+  /**
+   * Filters the messages by a specific field
+   * @param field
+   * @returns {Function}
+   */
   filterMessagesByField = field => e => {
     const { messages } = this.props;
     const { filteredMessages, routingKey, content } = this.state;
@@ -101,6 +117,10 @@ class MessageList extends Component<Props> {
     }
   };
 
+  /**
+   * Filters messages by content
+   * @param e
+   */
   filterMessagesByContent = e => {
     const { messages } = this.props;
     const { filteredMessages, routingKey, content } = this.state;
@@ -121,12 +141,19 @@ class MessageList extends Component<Props> {
     }
   };
 
+  /**
+   * Purge the local message list
+   */
   clearMessages = () => {
     const { clearMessages } = this.props;
     this.reset();
     clearMessages();
   };
 
+  /**
+   * Determine if the list if filtered so the ui can respond
+   * @returns {boolean}
+   */
   isFiltered = () => {
     const { messages } = this.props;
     const { filteredMessages } = this.state;
@@ -137,7 +164,7 @@ class MessageList extends Component<Props> {
     const { classes, showMessage, messages } = this.props;
     const { filteredMessages, routingKey, content } = this.state;
     return (
-      <Grid container spacing={24} className={classes.grow} justify="stretch" alignItems="center">
+      <Grid container spacing={24} className={classes.grow} alignItems="center">
         <Grid container item xs={12} spacing={16}>
           <Grid item container spacing={16} xs={8}>
             <Grid item xs={6}>

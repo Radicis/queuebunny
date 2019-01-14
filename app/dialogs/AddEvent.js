@@ -30,6 +30,9 @@ class AddEvent extends Component<Props> {
     });
   };
 
+  /**
+   * Set the local state and add the event
+   */
   handleOk = () => {
     const { handleOk } = this.props;
     const { newItemName } = this.state;

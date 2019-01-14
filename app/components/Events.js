@@ -34,6 +34,10 @@ type Props = {
 class Events extends Component<Props> {
   props: Props;
 
+  /**
+   * Manage the changing of selected event
+   * @param e
+   */
   handleEventChange = e => {
     const { selectEvent, openAddEventDialog } = this.props;
     if (!e.target.value) {
@@ -43,6 +47,10 @@ class Events extends Component<Props> {
     }
   };
 
+  /**
+   * Manage the changing of the selected exchange
+   * @param e
+   */
   handleExchangeChange = e => {
     const { updateEvent, selectedEvent, exchanges } = this.props;
     updateEvent(selectedEvent.id, {
@@ -50,6 +58,10 @@ class Events extends Component<Props> {
     });
   };
 
+  /**
+   * Manage the changing of the routing key
+   * @param e
+   */
   handleRoutingKeyChange = e => {
     const { updateEvent, selectedEvent } = this.props;
     updateEvent(selectedEvent.id, {
@@ -57,6 +69,11 @@ class Events extends Component<Props> {
     });
   };
 
+  /**
+   * Update the events content
+   * TODO: Needs a debounce
+   * @param content
+   */
   updateEventContent = content => {
     const { updateEvent, selectedEvent } = this.props;
     if (selectedEvent) {
@@ -74,6 +91,7 @@ class Events extends Component<Props> {
         <Grid item xs={12}>
           <Select value={selectedEvent ? selectedEvent.id : ' '} onChange={this.handleEventChange} fullWidth>
             {_.isEmpty(events) ? <MenuItem value={null}>Click to Add An Event</MenuItem> : ''}
+            {!selectedEvent && !_.isEmpty(events) ? <MenuItem value=" ">Select an Event</MenuItem> : ''}
             {events.map(e => (
               <MenuItem key={e.id} value={e.id}>
                 {e.name}
@@ -88,7 +106,8 @@ class Events extends Component<Props> {
               onChange={this.handleExchangeChange}
               fullWidth
             >
-              {_.isEmpty(exchanges) ? <MenuItem value="">No Exchanges</MenuItem> : ''}
+              {_.isEmpty(exchanges) ? <MenuItem value=" ">No Available Exchanges</MenuItem> : ''}
+              <MenuItem value=" ">Select an Exchange</MenuItem>
               {exchanges.map(e => (
                 <MenuItem key={e.name} value={e.name}>
                   {e.name}

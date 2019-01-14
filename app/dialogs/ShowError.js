@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
@@ -10,14 +10,10 @@ import Button from '@material-ui/core/Button';
 
 const styles = () => ({
   container: {
-    height: 'calc(100% - 68px)'
+    minWidth: '300px'
   },
   fullHeight: {
     height: '100%'
-  },
-  editor: {
-    height: '100%',
-    width: '100%'
   }
 });
 
@@ -27,25 +23,21 @@ type Props = {
   classes: object
 };
 
-class ShowMessage extends Component<Props> {
-  props: Props;
-
-  render() {
-    const { classes, error, handleOk } = this.props;
-    return (
-      <Dialog open>
-        <DialogTitle>Message Details</DialogTitle>
-        <DialogContent className={classes.fullHeight}>
-          <Typography>Error: {error.toString()}</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" onClick={handleOk} color="primary">
-            Ok
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
-}
+const ShowMessage = (props: Props) => {
+  const { classes, error, handleOk } = props;
+  return (
+    <Dialog open>
+      <DialogTitle className={classes.container}>Error!</DialogTitle>
+      <DialogContent className={classes.fullHeight}>
+        <Typography>Error: {JSON.stringify(error, null, 3)}</Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button variant="contained" onClick={handleOk} color="primary">
+          Ok
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 export default withStyles(styles)(ShowMessage);

@@ -43,7 +43,13 @@ const styles = theme => ({
     display: 'none'
   },
   fadedText: {
-    color: '#9c64a6'
+    color: theme.palette.primary.dark
+  },
+  connected: {
+    color: '#1e783d'
+  },
+  notConnected: {
+    color: '#7e1300'
   }
 });
 
@@ -53,6 +59,7 @@ type Props = {
   toggleMenuCollapse: () => void,
   purgeEvents: () => void,
   createConnection: () => void,
+  connection: boolean,
   lightTheme: boolean,
   httpOptions: object,
   amqpOptions: object,
@@ -67,6 +74,9 @@ class AppHeader extends Component<Props> {
     dialogOptionsOpen: false
   };
 
+  /**
+   * Show the options dialog
+   */
   openOptionsDialog = () => {
     this.setState({
       dialogOptionsOpen: true
@@ -74,7 +84,7 @@ class AppHeader extends Component<Props> {
   };
 
   /**
-   * Closes the dialogs
+   * Closes the options dialogs
    */
   closeDialogs = () => {
     this.setState({
@@ -88,7 +98,6 @@ class AppHeader extends Component<Props> {
    */
   setOptions = options => {
     const { updateOptions } = this.props;
-    console.log(options);
     updateOptions(options);
     this.closeDialogs();
   };
@@ -103,6 +112,7 @@ class AppHeader extends Component<Props> {
       menuCollapsed,
       httpOptions,
       amqpOptions,
+      connection,
       loading
     } = this.props;
 
@@ -127,7 +137,7 @@ class AppHeader extends Component<Props> {
               </React.Fragment>
             </Typography>
             <IconButton color="inherit" onClick={createConnection}>
-              <AutoRenew />
+              <AutoRenew className={connection ? classes.connected : classes.notConnected} />
             </IconButton>
             <IconButton color="inherit" onClick={this.openOptionsDialog}>
               <Settings />

@@ -41,11 +41,17 @@ class Sidebar extends Component<Props> {
     dialogAddEventOpen: false
   };
 
+  /**
+   * On mount, get the options from the store
+   */
   componentWillMount() {
     const { getEventsFromStore } = this.props;
     getEventsFromStore();
   }
 
+  /**
+   * Show the add event dialog
+   */
   openAddEventDialog = () => {
     this.setState({
       dialogAddEventOpen: true
@@ -61,25 +67,36 @@ class Sidebar extends Component<Props> {
     });
   };
 
+  /**
+   * Publish a message
+   */
   handlePublish = () => {
     const { publish, selectedEvent } = this.props;
     const { exchange, routingKey, content } = selectedEvent;
     publish(exchange, routingKey, JSON.stringify(content || {}));
   };
 
+  /**
+   * Publish x100
+   */
   handlePublish100 = () => {
-    const { publish, selectedEvent } = this.props;
-    const { exchange, routingKey, content } = selectedEvent;
     for (let i = 0; i < 100; i += 1) {
-      publish(exchange, routingKey, JSON.stringify(content || {}));
+      this.handlePublish();
     }
   };
 
+  /**
+   * Delete an event
+   */
   handleDelete = () => {
     const { selectedEvent, deleteEvent } = this.props;
     deleteEvent(selectedEvent.id);
   };
 
+  /**
+   * Add an event
+   * @param name
+   */
   handleAddEvent = name => {
     const { addEvent } = this.props;
     this.closeDialogs();

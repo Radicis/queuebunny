@@ -65,6 +65,9 @@ class SetOptions extends Component<Props> {
     }
   };
 
+  /**
+   * On mount, set the local state options
+   */
   componentWillMount() {
     const { lightTheme, amqpOptions, httpOptions } = this.props;
     this.setState({
@@ -74,12 +77,23 @@ class SetOptions extends Component<Props> {
     });
   }
 
+  /**
+   * Handle a checkbox change
+   * @param name
+   * @returns {Function}
+   */
   handleChange = name => event => {
     this.setState({
       [name]: event.target.checked
     });
   };
 
+  /**
+   * Handle a change in the http config
+   * TODO: Make this simpler
+   * @param name
+   * @returns {Function}
+   */
   handleHttpConfigChange = name => event => {
     const { localHttpOptions } = this.state;
     const updatedHttpOptions = _.assign({}, localHttpOptions, {
@@ -91,6 +105,12 @@ class SetOptions extends Component<Props> {
     });
   };
 
+  /**
+   * Handle a change in the http config
+   * TODO: Make this simpler
+   * @param name
+   * @returns {Function}
+   */
   handleAmqpConfigChange = name => event => {
     const { localAmqpOptions } = this.state;
     const updatedAmqpOptions = _.assign({}, localAmqpOptions, {
@@ -102,12 +122,20 @@ class SetOptions extends Component<Props> {
     });
   };
 
+  /**
+   * Handles a value change
+   * @param event
+   * @param value
+   */
   handleValueChange = (event, value) => {
     this.setState({
       value
     });
   };
 
+  /**
+   * Sets the options
+   */
   handleOk = () => {
     const { handleOk } = this.props;
     const { lightTheme, localHttpOptions, localAmqpOptions } = this.state;

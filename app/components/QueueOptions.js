@@ -36,6 +36,10 @@ class QueueOptions extends Component<Props> {
     selectedExchanges: []
   };
 
+  /**
+   * On update, set the selected exchanges to empty
+   * @param prevProps
+   */
   componentDidUpdate(prevProps) {
     const { exchanges } = this.props;
     if (exchanges !== prevProps.exchanges) {
@@ -45,6 +49,10 @@ class QueueOptions extends Component<Props> {
     }
   }
 
+  /**
+   * Manage the change in selected exchanges
+   * @param e
+   */
   handleSelectedExchangesChange = e => {
     const { exchanges } = this.props;
     this.setState({

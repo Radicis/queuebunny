@@ -141,7 +141,6 @@ class AMQP {
   publish(msg) {
     const self = this;
     const { exchangeName, routingKey, content } = msg;
-    // content.messageId = UUID();
     try {
       self._channel.publish(exchangeName, routingKey, Buffer.from(content));
     } catch (err) {

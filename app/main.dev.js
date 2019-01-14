@@ -110,16 +110,17 @@ const blackList = [
 ipcMain.on('createConnection', (e, options) => {
   console.log('Connect event from renderer');
   amqp.createConnection(options, (initErr, exchanges) => {
-    console.log('Connected');
     if (initErr || !exchanges) {
       mainWindow.send('error', initErr);
+    } else {
+      console.log('Connected');
+      // Strip out system exchanges
+      const validExchanges = _.filter(
+        exchanges,
+        ex => blackList.indexOf(ex.name) === -1 && !ex.name.includes('inspection.mobile')
+      );
+      mainWindow.send('ready', validExchanges);
     }
-    // Strip out system exchanges
-    const validExchanges = _.filter(
-      exchanges,
-      ex => blackList.indexOf(ex.name) === -1 && !ex.name.includes('inspection.mobile')
-    );
-    mainWindow.send('ready', validExchanges);
   });
 });
 

@@ -80,6 +80,7 @@ type Props = {
   httpOptions: object,
   amqpOptions: object,
   menuCollapsed: boolean,
+  connection: boolean,
   toggleMenuCollapse: () => void,
   getOptionsFromStore: () => void,
   purgeEvents: () => void,
@@ -92,6 +93,10 @@ type Props = {
   classes: object
 };
 
+/**
+ * Defines the primary palette for dark mode
+ * @type {{light: string, main: string, dark: string, contrastText: string}}
+ */
 const primary = {
   light: '#ffc4ff',
   main: '#ce93d8',
@@ -99,6 +104,21 @@ const primary = {
   contrastText: '#212121'
 };
 
+/**
+ * Defines the primary palette for light mode
+ * @type {{light: string, main: string, dark: string, contrastText: string}}
+ */
+const primaryLight = {
+  light: '#00e2ff',
+  main: '#2e96d8',
+  dark: '#276ba6',
+  contrastText: '#ededed'
+};
+
+/**
+ * Defines the secondary palette
+ * @type {{light: string, main: string, dark: string, contrastText: string}}
+ */
 const secondary = {
   light: '#b085f5',
   main: '#7e57c2',
@@ -122,6 +142,9 @@ class App extends Component<Props> {
     })
   };
 
+  /**
+   * On mount, create a theme from the options
+   */
   componentWillMount() {
     const { getOptionsFromStore, lightTheme, createConnection } = this.props;
     getOptionsFromStore();
@@ -131,16 +154,20 @@ class App extends Component<Props> {
       },
       palette: {
         type: lightTheme ? 'light' : 'dark',
-        primary,
+        primary: lightTheme ? primaryLight : primary,
         secondary
       }
     };
+    console.log(createMuiTheme(updatedTheme));
     this.setState({
       theme: createMuiTheme(updatedTheme)
     });
     createConnection();
   }
 
+  /**
+   * On update, create a theme from the options
+   */
   componentDidUpdate() {
     const { lightTheme } = this.props;
     const { theme } = this.state;
@@ -152,8 +179,8 @@ class App extends Component<Props> {
         useNextVariants: true
       },
       palette: {
-        type: updatedType,
-        primary,
+        type: lightTheme ? 'light' : 'dark',
+        primary: lightTheme ? primaryLight : primary,
         secondary
       }
     });
@@ -168,6 +195,7 @@ class App extends Component<Props> {
     const {
       classes,
       children,
+      connection,
       menuCollapsed,
       purgeEvents,
       updateOptions,
@@ -185,6 +213,7 @@ class App extends Component<Props> {
           <AppHeader
             loading={loading}
             httpOptions={httpOptions}
+            connection={connection}
             amqpOptions={amqpOptions}
             updateOptions={updateOptions}
             menuCollapsed={menuCollapsed}
@@ -226,6 +255,7 @@ const mapStateToProps = state => ({
   amqpOptions: state.options.options.amqpOptions,
   menuCollapsed: state.options.menuCollapsed,
   lightTheme: state.options.options.lightTheme,
+  connection: state.amqp.connection,
   loading: state.amqp.loading
 });
 

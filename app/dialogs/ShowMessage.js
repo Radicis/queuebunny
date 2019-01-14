@@ -10,6 +10,8 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import AceEditor from 'react-ace';
 
+import ParseContent from '../utils/ParseContent';
+
 const styles = () => ({
   container: {
     height: 'calc(100% - 75px)'
@@ -32,14 +34,6 @@ type Props = {
 
 class ShowMessage extends Component<Props> {
   props: Props;
-
-  parseContent = content => {
-    try {
-      return JSON.stringify(JSON.parse(content), null, 2);
-    } catch {
-      return content;
-    }
-  };
 
   render() {
     const { classes, lightTheme, message, handleOk } = this.props;
@@ -64,7 +58,7 @@ class ShowMessage extends Component<Props> {
                 height="100%"
                 width="100%"
                 highlightActiveLine
-                value={this.parseContent(message.content)}
+                value={ParseContent(message.content)}
                 setOptions={{
                   showLineNumbers: true,
                   tabSize: 2
