@@ -21,7 +21,11 @@ const styles = () => ({
     padding: '0 !important'
   },
   itemText: {
-    fontSize: '14px'
+    fontSize: '14px',
+    maxWidth: '200px !important'
+  },
+  itemTextWrapper: {
+    maxWidth: '100px'
   },
   itemTextFaded: {
     fontSize: '14px',
@@ -209,6 +213,7 @@ class MessageList extends Component<Props> {
             {_.map(filteredMessages, m => (
               <ListItem className={classes.item} onClick={() => showMessage(m)}>
                 <ListItemText
+                  className={classes.itemTextWrapper}
                   primary={
                     <React.Fragment>
                       <span className={classes.itemTextFaded}>{m.fields.exchange}</span>

@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import AceEditor from 'react-ace';
+import _ from 'lodash';
 
 import 'brace/mode/json';
 
@@ -30,6 +31,18 @@ class Editor extends Component<Props> {
     this.setState({
       content
     });
+  }
+
+  /**
+   * On mount, set the local state content
+   */
+  componentDidUpdate(prevProps) {
+    const { content } = this.props;
+    if (!_.isEqual(prevProps.content, content)) {
+      this.setState({
+        content
+      });
+    }
   }
 
   /**

@@ -15,7 +15,7 @@ import EventControls from '../components/EventControls';
 
 const styles = () => ({
   fullHeight: {
-    height: 'calc(100% - 30px)'
+    height: 'calc(100% - 40px)'
   }
 });
 
