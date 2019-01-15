@@ -36,7 +36,8 @@ const styles = theme => ({
     display: 'flex',
     height: 'calc(100% + 80px)',
     overflow: 'hidden',
-    borderRadius: 0
+    borderRadius: 0,
+    backgroundColor: '#424242'
   },
   hide: {
     display: 'none'
@@ -158,7 +159,6 @@ class App extends Component<Props> {
         secondary
       }
     };
-    console.log(createMuiTheme(updatedTheme));
     this.setState({
       theme: createMuiTheme(updatedTheme)
     });

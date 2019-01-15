@@ -4,8 +4,6 @@ import _ from 'lodash';
 import axios from 'axios';
 import UUID from 'uuid/v1';
 
-// amqp://localhost
-
 class AMQP {
   constructor() {
     const self = this;
@@ -91,46 +89,49 @@ class AMQP {
     });
   }
 
-  bindExchanges(exchanges) {
+  bindExchanges(exchanges, cb) {
     const self = this;
     self._channel
       .deleteQueue(self.amqpOptions.queue)
       .then(() =>
-        self._channel.assertQueue(self.amqpOptions.queue, {
-          durable: false,
-          // exclusive: true,
-          autoDelete: true
-        })
+        self._channel
+          .assertQueue(self.amqpOptions.queue, {
+            durable: false,
+            // exclusive: true,
+            autoDelete: true
+          })
+          .then(() => {
+            console.log('Queue Asserted');
+            exchanges = _.map(exchanges, exchange =>
+              self._channel
+                .assertExchange(exchange.name, exchange.type, {
+                  durable: exchange.durable
+                })
+                .then(() => self._channel.bindQueue(self.amqpOptions.queue, exchange.name, '#'))
+            );
+            return Promise.all(exchanges).then(res => {
+              console.log('All exchanges bound');
+              self._channel.consume(
+                self.amqpOptions.queue,
+                msg => {
+                  if (msg && msg.content) {
+                    const formattedMsg = msg;
+                    formattedMsg.content = formattedMsg.content.toString();
+                    self._emmitter.emit('message', formattedMsg);
+                    console.log('Got a message');
+                    self._channel.ack(msg);
+                  } else {
+                    console.log('Ignored a message with no content');
+                  }
+                },
+                {
+                  consumerTag: 'QueueBunnyUI'
+                }
+              );
+              cb();
+            });
+          })
       )
-      .then(() => {
-        exchanges = _.map(exchanges, exchange =>
-          self._channel
-            .assertExchange(exchange.name, exchange.type, {
-              durable: exchange.durable
-            })
-            .then(() => self._channel.bindQueue(self.amqpOptions.queue, exchange.name, '#'))
-        );
-        return Promise.all(exchanges).then(res => {
-          self._channel.consume(
-            self.amqpOptions.queue,
-            msg => {
-              if (msg && msg.content) {
-                const formattedMsg = msg;
-                formattedMsg.content = formattedMsg.content.toString();
-                self._emmitter.emit('message', formattedMsg);
-                console.log('Got a message');
-                self._channel.ack(msg);
-              } else {
-                console.log('Ignored a message with no content');
-              }
-            },
-            {
-              consumerTag: 'QueueBunnyUI'
-            }
-          );
-          self._emmitter.emit('connected');
-        });
-      })
       .catch(err => {
         console.log('Error in BindExchanges');
         console.log(err);
@@ -141,8 +142,11 @@ class AMQP {
   publish(msg) {
     const self = this;
     const { exchangeName, routingKey, content } = msg;
+    let updatedContent = content.replace(/\{\{uuid\}\}/g, UUID());
+    updatedContent = updatedContent.replace(/\{\{rand\}\}/g, Math.floor(Math.random() * 100));
+    console.log(updatedContent);
     try {
-      self._channel.publish(exchangeName, routingKey, Buffer.from(content));
+      self._channel.publish(exchangeName, routingKey, Buffer.from(updatedContent));
     } catch (err) {
       console.log('Error in Publish');
       console.log(err);

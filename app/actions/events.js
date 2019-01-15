@@ -71,7 +71,9 @@ export function addEvent(newEventName) {
 
     const newEvent = {
       name: newEventName,
-      id: UUID()
+      routingKey: 'Test',
+      id: UUID(),
+      content: '{\n\t"test": true\n}'
     };
 
     storeEvents.push(newEvent);

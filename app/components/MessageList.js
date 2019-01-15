@@ -15,6 +15,11 @@ const styles = () => ({
     flexGrow: 1,
     height: '100%'
   },
+  noPadding: {
+    flexGrow: 1,
+    height: '100%',
+    padding: '0 !important'
+  },
   itemText: {
     fontSize: '14px'
   },
@@ -25,7 +30,8 @@ const styles = () => ({
   },
   item: {
     padding: 5,
-    borderRadius: 5,
+    borderRadius: 0,
+    whiteSpace: 'nowrap',
     cursor: 'pointer',
     '&:hover': {
       backgroundColor: 'rgba(238,238,238,0.2)'
@@ -33,7 +39,7 @@ const styles = () => ({
   },
   itemList: {
     height: 'calc(100% - 85px)',
-    overflow: 'auto'
+    overflowX: 'auto'
   }
 });
 
@@ -165,7 +171,7 @@ class MessageList extends Component<Props> {
     const { filteredMessages, routingKey, content } = this.state;
     return (
       <Grid container spacing={24} className={classes.grow} alignItems="center">
-        <Grid container item xs={12} spacing={16}>
+        <Grid container item xs={12} spacing={8}>
           <Grid item container spacing={16} xs={8}>
             <Grid item xs={6}>
               <Input
@@ -198,7 +204,7 @@ class MessageList extends Component<Props> {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12} className={classes.grow}>
+        <Grid item xs={12} className={classes.noPadding}>
           <List className={classes.itemList}>
             {_.map(filteredMessages, m => (
               <ListItem className={classes.item} onClick={() => showMessage(m)}>

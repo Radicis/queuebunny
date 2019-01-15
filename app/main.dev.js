@@ -128,8 +128,10 @@ ipcMain.on('bindExchanges', (e, exchanges) => {
   console.log('Binding Exchanges');
   amqp.bindExchanges(exchanges, bindErr => {
     if (bindErr) {
+      console.log('Bind Error');
       mainWindow.send('error', bindErr);
     } else {
+      console.log('Bind Complete');
       mainWindow.send('bindComplete');
     }
   });

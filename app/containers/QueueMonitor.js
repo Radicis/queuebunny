@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 
 import Grid from '@material-ui/core/Grid';
+import Divider from '@material-ui/core/Divider';
 
 import * as MessageActions from '../actions/messages';
 import * as AmqpActions from '../actions/amqp';
@@ -40,7 +41,6 @@ class QueueMonitor extends Component<Props> {
   props: Props;
 
   state = {
-    messageFeedVisible: false,
     showMessageOpen: false,
     showErrorOpen: false,
     currentError: null,

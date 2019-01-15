@@ -10,6 +10,7 @@ import Input from '@material-ui/core/Input';
 import Checkbox from '@material-ui/core/Checkbox';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
+import Divider from '@material-ui/core/Divider/Divider';
 
 type Props = {
   classes: object,

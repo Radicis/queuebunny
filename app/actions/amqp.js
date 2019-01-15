@@ -31,8 +31,12 @@ export function reset() {
 
 export function bindExchanges(exchanges) {
   return (dispatch: Dispatch) => {
+    dispatch(setLoading(true));
     dispatch(setHasBindings(exchanges.length !== 0));
     ipcRenderer.send('bindExchanges', exchanges);
+    ipcRenderer.on('bindComplete', () => {
+      dispatch(setLoading(false));
+    });
   };
 }
 

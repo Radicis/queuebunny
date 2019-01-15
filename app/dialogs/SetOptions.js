@@ -285,7 +285,7 @@ class SetOptions extends Component<Props> {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary" variant="contained">
+          <Button onClick={handleClose} color="inherit" variant="contained">
             Cancel
           </Button>
           <Button onClick={this.handleOk} color="primary" variant="contained">

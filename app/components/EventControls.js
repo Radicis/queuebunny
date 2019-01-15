@@ -25,7 +25,7 @@ const EventControls = (props: Props) => {
       </Grid>
 
       <Grid item>
-        <Button onClick={handleDelete} variant="contained" color="light" disabled={!selectedEvent}>
+        <Button onClick={handleDelete} variant="contained" color="inherit" disabled={!selectedEvent}>
           Delete
         </Button>
       </Grid>
