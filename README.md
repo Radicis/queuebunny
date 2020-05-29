@@ -3,13 +3,13 @@
 First, clone the repo via git:
 
 ```bash
-git clone --depth 1 --single-branch --branch next https://github.com/radicis/electron-react-material-boilerplate.git your-project-name
+git clone https://github.com/Radicis/queuebunny.git
 ```
 
 And then install the dependencies with yarn.
 
 ```bash
-$ cd your-project-name
+$ cd queuebunny
 $ yarn
 ```
 
